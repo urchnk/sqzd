@@ -1,0 +1,21 @@
+[packages]
+aiogram = "~=3.12.0"
+aiogram_i18n = "*"
+aiohttp = "~=3.10.3"
+asgiref = "*"
+Django = "~=5.1"
+django-babel = "*"
+django-environ = "*"
+django-extensions = "*"
+django-modeltranslation = "*"
+django-money = "*"
+email-validator = "*"
+environs = "*"
+jsonfield = "*"
+phonenumbers = "*"
+psycopg2-binary = "*"
+py-moneyed = "*"
+pytz = "*"
+
+[requires]
+python_version = "3.12"

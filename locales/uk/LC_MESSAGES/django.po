@@ -1,0 +1,807 @@
+# Ukrainian translations for PROJECT.
+# Copyright (C) 2024 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2024-08-16 16:28+0200\n"
+"PO-Revision-Date: 2024-08-09 11:39+0200\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: uk\n"
+"Language-Team: uk <LL@li.org>\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.16.0\n"
+
+#: tgbot/handlers/clients_list.py:12 tgbot/keyboards/default.py:27
+msgid "Clients"
+msgstr "Клієнти"
+
+#: tgbot/handlers/help.py:13
+msgid "Commands: "
+msgstr "Команди: "
+
+#: tgbot/handlers/help.py:14
+msgid "/start - Start the bot"
+msgstr "/start - Запустити бота"
+
+#: tgbot/handlers/help.py:15
+msgid "/register_provider = Register as a service provider"
+msgstr "register_provider = Зареєструвати бізнес"
+
+#: tgbot/handlers/help.py:16
+msgid "/help - Get help"
+msgstr "/help - Допомога"
+
+#: tgbot/handlers/menu.py:17 tgbot/handlers/menu.py:37
+#: tgbot/keyboards/default.py:47 tgbot/keyboards/default.py:84
+#: tgbot/keyboards/default.py:97 tgbot/keyboards/default.py:124
+#: tgbot/keyboards/default.py:134 tgbot/keyboards/default.py:148
+msgid "Back to main menu"
+msgstr "Назад до головного меню"
+
+#: tgbot/handlers/menu.py:18 tgbot/handlers/provider_schedule.py:56
+#: tgbot/handlers/provider_schedule.py:76
+#: tgbot/handlers/provider_schedule.py:92
+#: tgbot/handlers/provider_schedule.py:107
+#: tgbot/handlers/provider_schedule.py:132
+#: tgbot/handlers/provider_schedule.py:199 tgbot/handlers/service_remove.py:37
+#: tgbot/handlers/service_remove.py:41
+msgid "Back to provider menu"
+msgstr "Назад до бізнес-кабінету"
+
+#: tgbot/handlers/menu.py:19 tgbot/keyboards/default.py:64
+msgid "My provider menu"
+msgstr "Мій бізнес-кабінет"
+
+#: tgbot/handlers/menu.py:20 tgbot/handlers/menu.py:40
+#: tgbot/handlers/provider_breaks.py:239 tgbot/handlers/provider_breaks.py:327
+#: tgbot/handlers/provider_schedule.py:237
+#: tgbot/handlers/provider_schedule.py:309 tgbot/handlers/service_create.py:28
+#: tgbot/handlers/service_create.py:36 tgbot/handlers/service_create.py:37
+#: tgbot/handlers/service_create.py:57
+msgid "Cancel"
+msgstr "Скасувати"
+
+#: tgbot/handlers/menu.py:28 tgbot/handlers/menu.py:31
+#: tgbot/handlers/menu.py:47 tgbot/handlers/provider_schedule.py:78
+#: tgbot/handlers/service_create.py:38
+msgid "Main menu:"
+msgstr "Головне меню:"
+
+#: tgbot/handlers/menu.py:38
+msgid "Back to client menu"
+msgstr "Назад до меню клієнта"
+
+#: tgbot/handlers/menu.py:39 tgbot/keyboards/default.py:30
+msgid "My client menu"
+msgstr "Моє меню клієнта"
+
+#: tgbot/handlers/menu.py:47
+msgid "Client menu:"
+msgstr "Меню клієнта:"
+
+#: tgbot/handlers/menu.py:51 tgbot/keyboards/default.py:57
+msgid "Upcoming reservations"
+msgstr "Майбутні записи"
+
+#: tgbot/handlers/menu.py:51 tgbot/handlers/menu.py:53
+#: tgbot/keyboards/default.py:58
+msgid "Past reservations"
+msgstr "Минулі записи"
+
+#: tgbot/handlers/provider_breaks.py:56 tgbot/keyboards/default.py:26
+msgid "Breaks & days off"
+msgstr "Перерви і вихідні"
+
+#: tgbot/handlers/provider_breaks.py:56 tgbot/handlers/provider_breaks.py:405
+#: tgbot/keyboards/default.py:161 tgbot/keyboards/default.py:196
+msgid "Back to breaks & days off"
+msgstr "Назад до перерв і вихідних"
+
+#: tgbot/handlers/provider_breaks.py:65 utils/bot/services.py:191
+msgid "You have not set lunch hours yet."
+msgstr "Ви ще не встановили години обіду."
+
+#: tgbot/handlers/provider_breaks.py:68 utils/bot/services.py:200
+msgid "You have not set your weekly days off yet."
+msgstr "Ви ще не встановили свої звичні вихідні"
+
+#: tgbot/handlers/provider_breaks.py:82 tgbot/keyboards/default.py:142
+msgid "Recurring schedule settings"
+msgstr "Циклічні налаштування графіку"
+
+#: tgbot/handlers/provider_breaks.py:82 tgbot/handlers/provider_breaks.py:101
+#: tgbot/handlers/provider_breaks.py:117 tgbot/handlers/provider_breaks.py:128
+#: tgbot/handlers/provider_breaks.py:143 tgbot/handlers/provider_breaks.py:151
+#: tgbot/handlers/provider_breaks.py:160 tgbot/handlers/provider_breaks.py:200
+msgid "Back to recurring schedule settings"
+msgstr "Назад до циклічних налаштувань"
+
+#: tgbot/handlers/provider_breaks.py:98 tgbot/keyboards/default.py:158
+msgid "Edit lunch time"
+msgstr "Налаштувати час обіду"
+
+#: tgbot/handlers/provider_breaks.py:104
+msgid "Enter the desirable lunch start time"
+msgstr "Введіть бажаний час початку обіду"
+
+#: tgbot/handlers/provider_breaks.py:106
+msgid ""
+"Please, consider keeping minutes divisible by 15, i.e.: 11:30, 12:45, "
+"13:00"
+msgstr ""
+"Будь ласка, введіть значення хвилин кратним 15, наприклад: 11:30, 12:45, "
+"13:00"
+
+#: tgbot/handlers/provider_breaks.py:119
+msgid "Please, enter time in HH:MM format with MM being among 00, 15, 30, 45."
+msgstr ""
+"Будь ласка, введуть час у форматі ГГ:ХХ, зі значенням хвилин з-поміж 00, "
+"15, 30, 45."
+
+#: tgbot/handlers/provider_breaks.py:130
+msgid "Please, enter the desirable lunch end in the same HH:MM format."
+msgstr "Будь ласка, введіть бажаний час закінчення обіду у такому ж форматі."
+
+#: tgbot/handlers/provider_breaks.py:145
+msgid ""
+"Please, enter end time (bigger than the start time) in HH:MM format with "
+"MM among 00, 15, 30, 45."
+msgstr ""
+"Будь ласка, введіть час закінчення у форматі ГГ:ХХ зі значенням хвилин "
+"з-поміж 00, 15, 30, 45."
+
+#: tgbot/handlers/provider_breaks.py:152
+msgid "You've set your recurring lunch time to "
+msgstr "Ви встановили звичний обід на "
+
+#: tgbot/handlers/provider_breaks.py:157 tgbot/keyboards/default.py:159
+msgid "Edit days off"
+msgstr "Редагувати вихідні"
+
+#: tgbot/handlers/provider_breaks.py:162
+msgid "Do you want to edit your weekly days off?"
+msgstr "Ви хочете відредагувати вихідні дні?"
+
+#: tgbot/handlers/provider_breaks.py:178 tgbot/handlers/provider_create.py:45
+#: tgbot/handlers/reservation_create.py:25 tgbot/handlers/service_remove.py:82
+#: tgbot/handlers/service_remove.py:109 tgbot/keyboards/default.py:13
+msgid "Yes"
+msgstr "Так"
+
+#: tgbot/handlers/provider_breaks.py:181 tgbot/handlers/provider_create.py:48
+#: tgbot/handlers/reservation_create.py:37 tgbot/handlers/service_remove.py:93
+#: tgbot/handlers/service_remove.py:114 tgbot/keyboards/default.py:13
+msgid "No"
+msgstr "Ні"
+
+#: tgbot/handlers/provider_breaks.py:184
+msgid "Recurring schedule menu"
+msgstr "Циклічні налаштування графіку"
+
+#: tgbot/handlers/provider_breaks.py:189 tgbot/handlers/provider_breaks.py:292
+#: tgbot/handlers/provider_schedule.py:142
+#: tgbot/handlers/provider_schedule.py:159
+msgid "You've entered something wrong. Please, try again."
+msgstr "Ви ввели щось не те. Будь ласка, спробуйте знову."
+
+#: tgbot/handlers/provider_breaks.py:201
+msgid "Switch ✅(working day) / ❌(day off)."
+msgstr "Перемикайте ✅(робочий день) / ❌(вихідний)."
+
+#: tgbot/handlers/provider_breaks.py:205 tgbot/keyboards/default.py:145
+msgid "Breaks"
+msgstr "Перерви"
+
+#: tgbot/handlers/provider_breaks.py:205 tgbot/handlers/provider_breaks.py:215
+#: tgbot/handlers/provider_breaks.py:269 tgbot/handlers/provider_breaks.py:368
+msgid "Back to breaks"
+msgstr "Назад до перерв"
+
+#: tgbot/handlers/provider_breaks.py:208 tgbot/handlers/provider_breaks.py:241
+msgid "Breaks menu:"
+msgstr "Меню перерв:"
+
+#: tgbot/handlers/provider_breaks.py:211 tgbot/keyboards/default.py:193
+msgid "Set a break"
+msgstr "Запланувати перерву"
+
+#: tgbot/handlers/provider_breaks.py:217 tgbot/handlers/provider_breaks.py:271
+msgid ""
+"Choose an option or enter the duration of a break in minutes (should be "
+"divisible by 15)."
+msgstr "Оберіть або введіть тривалість перерви в хвилинах (має бути кратною 15)."
+
+#: tgbot/handlers/provider_breaks.py:227 tgbot/handlers/provider_breaks.py:306
+#: tgbot/handlers/provider_schedule.py:54
+#: tgbot/handlers/provider_schedule.py:73
+#: tgbot/handlers/provider_schedule.py:89
+#: tgbot/handlers/provider_schedule.py:229
+#: tgbot/handlers/provider_schedule.py:308
+#: tgbot/handlers/reservation_create.py:49
+#: tgbot/handlers/reservation_create.py:115
+#: tgbot/handlers/reservation_create.py:117
+msgid "Next day"
+msgstr "Наступний день"
+
+#: tgbot/handlers/provider_breaks.py:231 tgbot/handlers/provider_breaks.py:305
+#: tgbot/handlers/provider_schedule.py:70
+#: tgbot/handlers/provider_schedule.py:88
+#: tgbot/handlers/reservation_create.py:115
+msgid "Today"
+msgstr "Сьогодні"
+
+#: tgbot/handlers/provider_breaks.py:235 tgbot/handlers/provider_breaks.py:303
+#: tgbot/handlers/provider_schedule.py:54
+#: tgbot/handlers/provider_schedule.py:67
+#: tgbot/handlers/provider_schedule.py:86
+#: tgbot/handlers/provider_schedule.py:233
+#: tgbot/handlers/provider_schedule.py:307
+#: tgbot/handlers/reservation_create.py:53
+#: tgbot/handlers/reservation_create.py:115
+msgid "Previous day"
+msgstr "Попередній день"
+
+#: tgbot/handlers/provider_breaks.py:256
+msgid "You have set a break:"
+msgstr "Ви запланували перерву:"
+
+#: tgbot/handlers/provider_breaks.py:273
+msgid ""
+"Max break duration is 4h (360 min). If you need more - consider using a "
+"few breaks in a row."
+msgstr ""
+"Максимальна тривалість перерви - 4 год (360 хв). Потрібно більше - "
+"заплануйте кілька перерв підряд."
+
+#: tgbot/handlers/provider_breaks.py:318
+msgid "You have a vacation."
+msgstr "У вас відпустка."
+
+#: tgbot/handlers/provider_breaks.py:320
+msgid "You have a day-off."
+msgstr "У вас вихідний."
+
+#: tgbot/handlers/provider_breaks.py:322
+msgid "You have an insufficiently tight schedule for this day."
+msgstr "У вас занадто щільний розклад на цей день."
+
+#: tgbot/handlers/provider_breaks.py:323 tgbot/handlers/provider_schedule.py:45
+msgid "See schedule"
+msgstr "Подивитися розклад"
+
+#: tgbot/handlers/provider_breaks.py:325
+msgid "Please, select the desirable date and time of the break."
+msgstr "Будь ласка, оберіть бажані дату та час перерви"
+
+#: tgbot/handlers/provider_breaks.py:332 tgbot/keyboards/default.py:194
+msgid "Cancel a break"
+msgstr "Скасувати перерву"
+
+#: tgbot/handlers/provider_breaks.py:343 utils/bot/services.py:133
+msgid "Break"
+msgstr "Перерва"
+
+#: tgbot/handlers/provider_breaks.py:343
+msgid "was canceled."
+msgstr "скасована."
+
+#: tgbot/handlers/provider_breaks.py:362
+msgid "You don't have any breaks planned"
+msgstr "У вас немає запланованих перерв."
+
+#: tgbot/handlers/provider_breaks.py:364
+msgid "Do you want to cancel another break?"
+msgstr "Ви хочете скасувати ще одну перерву?"
+
+#: tgbot/handlers/provider_breaks.py:366
+msgid "Do you want to cancel a break?"
+msgstr "Ви хочете скасувати перерву?"
+
+#: tgbot/handlers/provider_breaks.py:373 tgbot/keyboards/default.py:146
+msgid "Days off"
+msgstr "Вихідні"
+
+#: tgbot/handlers/provider_breaks.py:373
+msgid "Back to days off"
+msgstr "Назад до відпусток"
+
+#: tgbot/handlers/provider_breaks.py:385
+msgid "You have reservations on this date. Cancel them before planning a vacation"
+msgstr "У вас є записи на цей день. Скасуйте їх перш ніж планувати відпустку."
+
+#: tgbot/handlers/provider_breaks.py:389
+msgid "You have added the day off for "
+msgstr "Ви додали вихідний "
+
+#: tgbot/handlers/provider_breaks.py:393
+msgid "You have removed the day off for "
+msgstr "Ви видалили вихідний "
+
+#: tgbot/handlers/provider_breaks.py:395
+msgid ""
+" is already a weekend. No need to set a day off.\n"
+"\n"
+msgstr ""
+" — ваш звичний вихідний. Немає необхідності планувати відпустку.\n"
+"\n"
+
+#: tgbot/handlers/provider_breaks.py:407
+msgid "Switch available weekdays (📅) to days off (🏖)."
+msgstr "Перемикайте між робочим днем (📅) і вихідним (🏖)."
+
+#: tgbot/handlers/provider_breaks.py:409
+msgid "You cannot set a day off for a day with scheduled reservations (📝)."
+msgstr "Ви не можете запланувати вихідний на день, коли у вас є записи (📝)."
+
+#: tgbot/handlers/provider_breaks.py:411
+msgid "There is no need to set a day off on your recurring weekend (🏠)."
+msgstr ""
+"Немає необхідності планувати окремий вихідний на ваш щотижневий вихідний "
+"день (🏠)."
+
+#: tgbot/handlers/provider_create.py:35
+msgid "You are already registered as a provider."
+msgstr "Ви вже зареєстровані як надавач послуг."
+
+#: tgbot/handlers/provider_create.py:40
+msgid "Do you want to register yourself as a provider?"
+msgstr "Ви хочете зареєструватися надавачем послуг?"
+
+#: tgbot/handlers/provider_create.py:47
+msgid "Please, enter your phone number:"
+msgstr "Будь ласка, введіть свій номер телефону:"
+
+#: tgbot/handlers/provider_create.py:50
+msgid "You've canceled the provider registration process."
+msgstr "Ви скасували процес реєстрації надавачем послуг."
+
+#: tgbot/handlers/provider_create.py:52 tgbot/handlers/reservation_create.py:43
+#: tgbot/handlers/service_remove.py:100 tgbot/handlers/service_remove.py:118
+msgid "Please, enter Yes or No."
+msgstr "Будь ласка, введіть Так або Ні."
+
+#: tgbot/handlers/provider_create.py:59
+msgid "Please, enter your email:"
+msgstr "Будь ласка, введіть свій email:"
+
+#: tgbot/handlers/provider_create.py:69
+msgid "At what time do you begin your working day?"
+msgstr "О котрій годині ви починаєте робочий день?"
+
+#: tgbot/handlers/provider_create.py:79
+msgid "At what time do you finish your working day?"
+msgstr "О котрій годині ви завершуєте працювати?"
+
+#: tgbot/handlers/provider_create.py:104
+msgid ""
+"You have been registered as a provider with the following info:\n"
+"\n"
+msgstr ""
+"Вітаємо! Ви зареєструвалися надавачем послуг:\n"
+"\n"
+
+#: tgbot/handlers/provider_create.py:105
+msgid "Phone number: {phone}\n"
+msgstr "Телефон: {phone}\n"
+
+#: tgbot/handlers/provider_create.py:107
+msgid "Working day from {start} to {end}\n"
+msgstr "Робочий день з {start} до {end}\n"
+
+#: tgbot/handlers/provider_create.py:108
+msgid "Your link for booking: {booking_link}"
+msgstr "Посилання для запису: {booking_link}"
+
+#: tgbot/handlers/provider_schedule.py:45 tgbot/keyboards/default.py:22
+msgid "Reservations"
+msgstr "Записи"
+
+#: tgbot/handlers/provider_schedule.py:55
+#: tgbot/handlers/provider_schedule.py:91
+#: tgbot/handlers/provider_schedule.py:100 tgbot/keyboards/default.py:95
+msgid "New reservation"
+msgstr "Новий запис"
+
+#: tgbot/handlers/provider_schedule.py:105
+#: tgbot/handlers/provider_schedule.py:120
+msgid "Choose client"
+msgstr "Оберіть клієнта"
+
+#: tgbot/handlers/provider_schedule.py:106
+#: tgbot/handlers/provider_schedule.py:129
+msgid "New client"
+msgstr "Новий клієнт"
+
+#: tgbot/handlers/provider_schedule.py:110
+msgid "New reservation:"
+msgstr "Новий запис:"
+
+#: tgbot/handlers/provider_schedule.py:123 tgbot/keyboards/default.py:122
+msgid "Next 10"
+msgstr "Наступні 10"
+
+#: tgbot/handlers/provider_schedule.py:126 tgbot/keyboards/default.py:111
+msgid "Previous 10"
+msgstr "Попередні 10"
+
+#: tgbot/handlers/provider_schedule.py:134
+msgid ""
+"Please, enter the new client's name (or just share a contact with a phone"
+" number):"
+msgstr ""
+"Будь ласка, введіть номер телефону клієнта (або ж поділіться тут його "
+"контактом разом з номером телефону):"
+
+#: tgbot/handlers/provider_schedule.py:150
+msgid "Please, choose a service:"
+msgstr "Будь ласка, оберіть послугу:"
+
+#: tgbot/handlers/provider_schedule.py:154
+msgid "You have no services listed at the moment."
+msgstr "Ви поки що не додали жодної послуги."
+
+#: tgbot/handlers/provider_schedule.py:164
+msgid "Please, choose a client:"
+msgstr "Будь ласка, оберіть клієнта:"
+
+#: tgbot/handlers/provider_schedule.py:183
+msgid "Client:\n"
+msgstr "Клієнт:\n"
+
+#: tgbot/handlers/provider_schedule.py:198
+#: tgbot/handlers/provider_schedule.py:212
+msgid "Leave it empty"
+msgstr "Залишити пустим"
+
+#: tgbot/handlers/provider_schedule.py:201
+msgid "Please, enter the new client's phone number (or leave it empty):"
+msgstr "Будь ласка, введіть номер телефону клієнта (або залиште пустим):"
+
+#: tgbot/handlers/provider_schedule.py:220
+msgid "Please, choose a service"
+msgstr "Будь ласка, оберіть послугу:"
+
+#: tgbot/handlers/provider_schedule.py:240
+msgid "You've canceled the reservation setting."
+msgstr "Ви скасували додавання запису."
+
+#: tgbot/handlers/provider_schedule.py:263
+msgid "You have set the following reservation:\n"
+msgstr "Ви додали новий запис:\n"
+
+#: tgbot/handlers/provider_schedule.py:264 utils/bot/services.py:58
+msgid "Service: {service}\n"
+msgstr "Послуга: {service}\n"
+
+#: tgbot/handlers/provider_schedule.py:265
+msgid "Client: {name} {username}\n"
+msgstr "Клієнт: {name} {username}\n"
+
+#: tgbot/handlers/provider_schedule.py:268
+msgid "Date and time: {weekday}, {strdate}, {strtime}"
+msgstr "День і час: {weekday}, {strdate}, {strtime}"
+
+#: tgbot/handlers/provider_schedule.py:283
+#: tgbot/handlers/reservation_create.py:102
+msgid "You've clearly entered something wrong. Please, try again."
+msgstr "Ви ввели щось не те. Спробуйте ще раз."
+
+#: tgbot/handlers/provider_schedule.py:311
+#: tgbot/handlers/reservation_create.py:121
+msgid "Please, select the desirable date and time of the reservation."
+msgstr "Будь ласка, оберіть дату та час запису."
+
+#: tgbot/handlers/provider_settings.py:16 tgbot/keyboards/default.py:29
+msgid "Provider settings"
+msgstr "Налаштування бізнесу"
+
+#: tgbot/handlers/provider_settings.py:17
+#: tgbot/handlers/provider_settings.py:34
+msgid "Back to provider settings"
+msgstr "Назад до бізнес-кабінету"
+
+#: tgbot/handlers/provider_settings.py:24
+msgid "Provider settings:"
+msgstr "Налаштування бізнесу:"
+
+#: tgbot/handlers/provider_settings.py:28 tgbot/keyboards/default.py:40
+msgid "Get my deep link"
+msgstr "Отримати посилання для запису"
+
+#: tgbot/handlers/reservation_create.py:30
+msgid "Please, select a desirable service:"
+msgstr "Оберіть послугу:"
+
+#: tgbot/handlers/reservation_create.py:34
+msgid "This provider has no services listed at the moment."
+msgstr "Цей виконавець не має доданих послуг станом на зараз."
+
+#: tgbot/handlers/reservation_create.py:40
+#: tgbot/handlers/reservation_create.py:60
+msgid "You've canceled the booking process."
+msgstr "Ви скасували процес запису."
+
+#: tgbot/handlers/reservation_create.py:57
+#: tgbot/handlers/reservation_create.py:119
+msgid "Cancel booking"
+msgstr "Скасувати запис"
+
+#: tgbot/handlers/reservation_create.py:83
+msgid "You have booked the following reservation:\n"
+msgstr "Ви забронювали запис:\n"
+
+#: tgbot/handlers/reservation_create.py:108 utils/bot/consts.py:3
+#, python-format
+msgid "%m/%d/%Y"
+msgstr "%d.%m.%Y"
+
+#: tgbot/handlers/service_create.py:25 tgbot/keyboards/default.py:81
+msgid "Add service"
+msgstr "Додати послугу"
+
+#: tgbot/handlers/service_create.py:30
+msgid "Please, enter the name of the service:"
+msgstr "Будь ласка, введіть назву послуги:"
+
+#: tgbot/handlers/service_create.py:42
+msgid "You already have a service this name. Please, choose another."
+msgstr "У вас вже є послуга з такою назвою. Будь ласка, оберіть іншу."
+
+#: tgbot/handlers/service_create.py:49
+msgid "Please, enter the standard duration of this service in minutes:"
+msgstr "Введіть звичну тривалість цієї послуги в хвилинах:"
+
+#: tgbot/handlers/service_create.py:60
+msgid "Please, enter the price of this service:"
+msgstr "Введіть ціну на дану послугу:"
+
+#: tgbot/handlers/service_create.py:74 utils/bot/services.py:30
+msgid "minutes\n"
+msgstr "хвилин\n"
+
+#: tgbot/handlers/service_remove.py:30 tgbot/keyboards/default.py:83
+msgid "Remove service"
+msgstr "Видалити послугу"
+
+#: tgbot/handlers/service_remove.py:33
+msgid "You are not registered as a provider."
+msgstr "Ви не зареєстровані надавачем послуг."
+
+#: tgbot/handlers/service_remove.py:43
+msgid "Choose a service you want to remove:"
+msgstr "Оберіть послугу для видалення:"
+
+#: tgbot/handlers/service_remove.py:53
+msgid "This service has:\n"
+msgstr "На цю послугу є:\n"
+
+#: tgbot/handlers/service_remove.py:56 utils/bot/services.py:100
+msgid "Upcoming reservations: "
+msgstr "Майбутні записи: "
+
+#: tgbot/handlers/service_remove.py:59 utils/bot/services.py:97
+msgid "Past reservations: "
+msgstr "Минулі записи: "
+
+#: tgbot/handlers/service_remove.py:62
+msgid "You can only make it inactive now.\n"
+msgstr "Ви можете лише деактивувати її.\n"
+
+#: tgbot/handlers/service_remove.py:63
+msgid "Clients won't longer be able to book this service.\n"
+msgstr "Клієнти більше не зможуть забронювати цю послугу.\n"
+
+#: tgbot/handlers/service_remove.py:64
+msgid "Do you want to deactivate this service?"
+msgstr "Ви хочете деактивувати цю послугу?"
+
+#: tgbot/handlers/service_remove.py:70
+msgid "This service never had any reservations.\n"
+msgstr "На цю послугу не було жодного запису.\n"
+
+#: tgbot/handlers/service_remove.py:70
+msgid "Do you want to remove this service?"
+msgstr "Ви хочете видалити цю послугу?"
+
+#: tgbot/handlers/service_remove.py:85
+msgid "{service_name} (deactivated {now})"
+msgstr "{service_name} (деактивовано {now})"
+
+#: tgbot/handlers/service_remove.py:91
+msgid "Service {service_name} was successfully deactivated."
+msgstr "Послугу {service_name} успішно деактивовано."
+
+#: tgbot/handlers/service_remove.py:96
+msgid "You've canceled the service deactivation process."
+msgstr "Ви скасували деактивацію послуги."
+
+#: tgbot/handlers/service_remove.py:112
+msgid "Service {service_name} was successfully removed."
+msgstr "Послугу {service_name} успішно видалено."
+
+#: tgbot/handlers/service_remove.py:116
+msgid "You've canceled the service removal process."
+msgstr "Ви скасували видалення послуги."
+
+#: tgbot/handlers/services_list.py:12 tgbot/keyboards/default.py:80
+msgid "My services"
+msgstr "Мої послуги"
+
+#: tgbot/handlers/services_list.py:19
+msgid "You have no services set up at the moment."
+msgstr "Наразі у вас немає доданих послуг."
+
+#: tgbot/handlers/services_menu.py:11 tgbot/keyboards/default.py:23
+msgid "Services menu"
+msgstr "Меню послуг"
+
+#: tgbot/handlers/services_menu.py:14
+msgid "Services menu:"
+msgstr "Меню послуг:"
+
+#: tgbot/handlers/start.py:29
+#, fuzzy
+msgid "Hello, "
+msgstr "Привіт, {name}"
+
+#: tgbot/handlers/start.py:36
+msgid "Do you want to book an reservation with provider {full_name} @{username}?"
+msgstr "Чи бажаєте забронювати послугу у {full_name} @{username}?"
+
+#: tgbot/handlers/start.py:57
+msgid "Hello, {name}"
+msgstr "Привіт, {name}"
+
+#: tgbot/keyboards/default.py:94
+msgid "All reservations"
+msgstr "Всі записи"
+
+#: utils/bot/consts.py:4
+msgid "%I:%M %p"
+msgstr "%H:%M"
+
+#: utils/bot/consts.py:5
+msgid "%H:%M"
+msgstr "%H:%M"
+
+#: utils/bot/consts.py:6
+#, python-format
+msgid "%m/%d/%Y, %I:%M %p"
+msgstr "%d.%m.%Y, %-H:%M"
+
+#: utils/bot/consts.py:9 utils/bot/consts.py:19
+msgid "Mon"
+msgstr "Пн"
+
+#: utils/bot/consts.py:10 utils/bot/consts.py:20
+msgid "Tue"
+msgstr "Вт"
+
+#: utils/bot/consts.py:11 utils/bot/consts.py:21
+msgid "Wen"
+msgstr "Ср"
+
+#: utils/bot/consts.py:12 utils/bot/consts.py:22
+msgid "Thu"
+msgstr "Чт"
+
+#: utils/bot/consts.py:13 utils/bot/consts.py:23
+msgid "Fri"
+msgstr "Пт"
+
+#: utils/bot/consts.py:14 utils/bot/consts.py:24
+msgid "Sat"
+msgstr "Сб"
+
+#: utils/bot/consts.py:15 utils/bot/consts.py:25
+msgid "Sun"
+msgstr "Нд"
+
+#: utils/bot/consts.py:29
+msgid "Monday"
+msgstr "Понеділок"
+
+#: utils/bot/consts.py:30
+msgid "Tuesday"
+msgstr "Вівторок"
+
+#: utils/bot/consts.py:31
+msgid "Wednesday"
+msgstr "Середа"
+
+#: utils/bot/consts.py:32
+msgid "Thursday"
+msgstr "Четвер"
+
+#: utils/bot/consts.py:33
+msgid "Friday"
+msgstr "П'ятниця"
+
+#: utils/bot/consts.py:34
+msgid "Saturday"
+msgstr "Субота"
+
+#: utils/bot/consts.py:35
+msgid "Sunday"
+msgstr "Неділя"
+
+#: utils/bot/services.py:32
+msgid "(inactive)"
+msgstr "(неактивна)"
+
+#: utils/bot/services.py:42
+msgid "You have no upcoming reservations."
+msgstr "У вас немає записів."
+
+#: utils/bot/services.py:44
+msgid "You have no past reservations."
+msgstr "У вас ще не було записів."
+
+#: utils/bot/services.py:59
+msgid "Provider: {name}, @{username}\n"
+msgstr "Виконавець: {name}, @{username}\n"
+
+#: utils/bot/services.py:103
+msgid "Last reservation: "
+msgstr "Останній запис: "
+
+#: utils/bot/services.py:106
+msgid "Next reservation: "
+msgstr "Наступний запис: "
+
+#: utils/bot/services.py:112
+msgid "You have had no clients yet."
+msgstr "У вас ще не було клієнтів."
+
+#: utils/bot/services.py:120
+msgid "No appointments."
+msgstr "Немає записів."
+
+#: utils/bot/services.py:131
+msgid "Lunch"
+msgstr "Обід"
+
+#: utils/bot/services.py:140
+msgid "Upcoming breaks:"
+msgstr "Заплановані перерви:"
+
+#: utils/bot/services.py:155
+msgid "You have no upcoming breaks."
+msgstr "У вас немає запланованих перерв"
+
+#: utils/bot/services.py:162
+msgid "Upcoming vacations:"
+msgstr "Заплановані вихідні:"
+
+#: utils/bot/services.py:176
+msgid "You have no upcoming vacations."
+msgstr "У вас немає запланованих відпусток."
+
+#: utils/bot/services.py:184
+msgid "Lunch: "
+msgstr "Обід: "
+
+#: utils/bot/services.py:198
+msgid "Days off: "
+msgstr "Вихідні: "
+
+#: utils/bot/set_bot_commands.py:9
+msgid "Start bot"
+msgstr "Запустити бота"
+
+#: utils/bot/set_bot_commands.py:10
+msgid "Become a provider"
+msgstr "Зареєструвати бізнес"
+
+#: utils/bot/set_bot_commands.py:11
+msgid "Get help"
+msgstr "Допомога"
+
