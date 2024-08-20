@@ -10,7 +10,6 @@ from bot import _
 from moneyed.l10n import format_money
 from tgbot.filters.provider import IsProviderFilter
 from tgbot.keyboards.default import get_provider_services_menu
-from utils.bot.localization import get_locale
 from utils.bot.to_async import add_service, check_service_exists, get_user
 
 service_create_router = Router()

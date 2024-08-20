@@ -67,20 +67,21 @@ class Break(models.Model, TimeStampedModelMixin):
         super(Break, self).save(*args, **kwargs)
 
 
-class Notification(models.Model, TimeStampedModelMixin):
-    reservation = models.ForeignKey(
-        Reservation,
-        related_name="notifications",
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True,
-    )
-    client = models.ForeignKey(
-        User,
-        verbose_name="Client",
-        related_name="notifications",
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True,
-    )
-    time = models.DateTimeField(null=True, blank=True)
+# TODO: Actually implement booking reminder notifications
+# class Notification(models.Model, TimeStampedModelMixin):
+#     reservation = models.ForeignKey(
+#         Reservation,
+#         related_name="notifications",
+#         on_delete=models.CASCADE,
+#         null=True,
+#         blank=True,
+#     )
+#     client = models.ForeignKey(
+#         User,
+#         verbose_name="Client",
+#         related_name="notifications",
+#         on_delete=models.CASCADE,
+#         null=True,
+#         blank=True,
+#     )
+#     time = models.DateTimeField(null=True, blank=True)

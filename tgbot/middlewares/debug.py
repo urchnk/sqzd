@@ -4,6 +4,7 @@ from aiogram import BaseMiddleware
 from aiogram.types import Message
 
 
+# Middleware for test bots to restrict the outsiders from interacting
 class AllowedUsersMiddleware(BaseMiddleware):
     def __init__(self, allowed_user_ids: list[int]):
         self.allowed_user_ids = allowed_user_ids

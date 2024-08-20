@@ -7,7 +7,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import KeyboardButton, Message, ReplyKeyboardMarkup
 
-from bot import _
+from bot import _, bot
 from tgbot.keyboards.default import get_client_main_menu, get_provider_services_keyboard, yes_no
 from utils.bot.consts import DATE_FORMAT, TIME_FORMAT, weekdays
 from utils.bot.to_async import get_available_hours, get_provider, get_service_data, get_user, set_reservation
@@ -89,6 +89,14 @@ async def datetime_selection_or_complete_booking(message: Message, state: FSMCon
             "\n".join(message_list),
             reply_markup=(await get_client_main_menu(tg_id=message.from_user.id)),
         )
+        provider_notification = [
+            _("You have a new reservation:\n"),
+            state_data["service_name"],
+            client.full_name + ", @" + client.tg_username,
+            weekday + ", " + strdate + ", " + strtime,
+        ]
+        provider_chat = await bot.get_chat(provider_id)
+        await bot.send_message(chat_id=provider_chat.id, text="\n".join(provider_notification))
         return
     else:
         service_name = message.text
@@ -105,7 +113,7 @@ async def datetime_selection_or_complete_booking(message: Message, state: FSMCon
     day, available_slots, is_day_off, is_vacation = await get_available_hours(
         tg_id=provider_id, client_tg_id=client_tg_id, service_name=service_name, offset=offset
     )
-    date = weekdays[int(day.weekday())] + ", " + day.strftime(_("%m/%d/%Y"))  # TODO: handle date locales more nicely
+    date = weekdays[int(day.weekday())] + ", " + day.strftime(_(DATE_FORMAT))
     markup = ReplyKeyboardMarkup(keyboard=[[]], resize_keyboard=True, one_time_keyboard=True)
     for time in available_slots:
         time_string = time.strftime("%H:%M")

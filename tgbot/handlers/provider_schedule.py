@@ -58,6 +58,20 @@ async def provider_list_reservations(message: Message, state: FSMContext):
 
 
 @provider_schedule_router.message(
+    F.text == _("New reservation"),
+    IsProviderFilter(),
+)
+async def provider_new_reservation(message: Message, state: FSMContext):
+    markup = ReplyKeyboardMarkup(keyboard=[[]], resize_keyboard=True, one_time_keyboard=True)
+    markup.keyboard.append([KeyboardButton(text=_("Choose client"))])
+    markup.keyboard.append([KeyboardButton(text=_("New client"))])
+    markup.keyboard.append([KeyboardButton(text=_("Back to provider menu"))])
+    await state.set_state(ProviderReservationsStatesGroup.new_reservation)
+    await state.update_data(offset=0)
+    await message.answer(_("New reservation:"), reply_markup=markup)
+
+
+@provider_schedule_router.message(
     ProviderReservationsStatesGroup.list_reservations,
     IsProviderFilter(),
 )
@@ -97,20 +111,6 @@ async def provider_surf_reservations(message: Message, state: FSMContext):
 
 
 @provider_schedule_router.message(
-    F.text == _("New reservation"),
-    IsProviderFilter(),
-)
-async def provider_new_reservation(message: Message, state: FSMContext):
-    markup = ReplyKeyboardMarkup(keyboard=[[]], resize_keyboard=True, one_time_keyboard=True)
-    markup.keyboard.append([KeyboardButton(text=_("Choose client"))])
-    markup.keyboard.append([KeyboardButton(text=_("New client"))])
-    markup.keyboard.append([KeyboardButton(text=_("Back to provider menu"))])
-    await state.set_state(ProviderReservationsStatesGroup.new_reservation)
-    await state.update_data(offset=0)
-    await message.answer(_("New reservation:"), reply_markup=markup)
-
-
-@provider_schedule_router.message(
     ProviderReservationsStatesGroup.new_reservation,
     IsProviderFilter(),
 )
@@ -137,27 +137,32 @@ async def provider_new_reservation_choose_client(message: Message, state: FSMCon
 
     else:
         try:
-            username = message.text.split(", ")[1].lstrip("@")
+            identifier = message.text.split(", ")[1]
         except AttributeError:
             await message.answer(_("You've entered something wrong. Please, try again."))
             return
-        if await check_user_exists(username):
-            user = await get_user(username=username)
-            await state.update_data(username=username, client_id=user.id)
+        phone = username = ""
+        if identifier[0] == "@":
+            username = identifier.lstrip("@")
+        elif identifier[0] == "+":
+            phone = identifier
+        else:
+            return await message.answer(_("You've entered something wrong. Please, try again."))
+
+        if user := await get_user(username=username, phone=phone):
+            await state.update_data(username=user.username, client_id=user.id)
             markup = await get_provider_services_keyboard(message.from_user.id)
             if len(markup.keyboard) > 1:
                 await state.set_state(ProviderReservationsStatesGroup.choose_service)
                 await message.answer(_("Please, choose a service:"), reply_markup=markup)
                 return
             else:
-                await message.answer(
+                return await message.answer(
                     _("You have no services listed at the moment."),
                     reply_markup=markup,
                 )
-                return
         else:
-            await message.answer(_("You've entered something wrong. Please, try again."))
-            return
+            return await message.answer(_("You've entered something wrong. Please, try again."))
 
     await state.update_data(offset=offset)
     markup = await get_provider_clients_keyboard(message.from_user.id, offset=offset)
@@ -297,7 +302,7 @@ async def provider_new_reservation_choose_datetime(message: Message, state: FSMC
     day, available_slots, is_day_off, is_vacation = await get_available_hours(
         tg_id=provider_id, client_id=client_id, client_tg_id=client_tg_id, service_name=service_name, offset=offset
     )
-    date = weekdays[int(day.weekday())] + ", " + day.strftime(DATE_FORMAT)  # TODO: handle date locales more nicely
+    date = weekdays[int(day.weekday())] + ", " + day.strftime(DATE_FORMAT)
     markup = ReplyKeyboardMarkup(keyboard=[[]], resize_keyboard=True, one_time_keyboard=True)
     for time in available_slots:
         time_string = time.strftime(TIME_FORMAT)

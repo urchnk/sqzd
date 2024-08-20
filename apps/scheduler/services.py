@@ -8,7 +8,7 @@ from apps.roles.models import Provider, User
 from apps.scheduler.models import Break, Reservation, Vacation
 
 
-def get_events_by_day(provider: Provider = None, client: User = None, day: date = date.today()) -> Any:
+def get_events_by_day(provider: Provider = None, client: User = None, day: date = date.today()) -> list:
     to_tz = timezone.get_current_timezone()  # TODO: handle timezones
     now = timezone.make_aware(datetime.now(), to_tz) + timedelta(minutes=5)
     qs = Reservation.objects.select_related("provider", "client", "service").filter(date=day, is_canceled=False)
@@ -97,8 +97,8 @@ def is_day_unavailable(provider: Provider, day: date, now: datetime, duration: i
 
 
 def get_weekend(provider: Provider) -> list[int]:
-    weekend = sorted([int(i) for i in provider.days_off])
-    return weekend  # TODO: de-hardcode weekends handling
+    weekend = sorted([int(i) for i in provider.weekend])
+    return weekend  # TODO: de-hardcode weekends handling (or maybe not?)
 
 
 def get_start_time(provider: Provider, day: date, to_tz: timezone, now: datetime, duration: timedelta) -> datetime:

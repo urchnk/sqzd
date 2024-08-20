@@ -17,7 +17,7 @@ start_router = Router()
 async def user_start_deeplink(message: Message, command: CommandObject(), state: FSMContext):
     await state.clear()
     last_name = message.from_user.last_name or None
-    locale = "uk" if message.from_user.language_code in ["uk", "ru"] else "en"
+    locale = "uk" if message.from_user.language_code in ["uk", "ru"] else "en"  # LOL, anyway TODO: de-hardcode this
     user = await get_or_create_user(
         tg_id=message.from_user.id,
         username=message.from_user.username,
@@ -25,8 +25,7 @@ async def user_start_deeplink(message: Message, command: CommandObject(), state:
         last_name=last_name,
         locale=locale,
     )
-    name = user.get_full_name()
-    await message.answer(_("Hello, ") + name)
+    await message.answer(_("Hello, ") + user.first_name)
     provider = await get_provider(tg_id=int(command.args))
     provider_full_name = provider.user.get_full_name()
     provider_username = provider.user.username
@@ -54,6 +53,6 @@ async def user_start(message: Message, state: FSMContext):
     markup = await get_main_menu(message.from_user.id)
     reservations_as_message = await get_client_reservations_as_message(user.tg_id)
     await message.answer(
-        _("Hello, {name}").format(name=user.first_name) + "\n" + reservations_as_message,
+        _("Hello, ") + user.first_name + "\n" + reservations_as_message,
         reply_markup=markup,
     )

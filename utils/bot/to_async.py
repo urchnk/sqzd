@@ -8,8 +8,6 @@ from django.db.models import F, Q, QuerySet
 from django.forms import model_to_dict
 from django.utils import timezone
 
-from aiogram import types
-
 from apps.roles.models import Provider, User
 from apps.scheduler.models import Break, Reservation, Vacation
 from apps.scheduler.services import find_available_slots, get_events_by_day
@@ -19,11 +17,11 @@ from asgiref.sync import sync_to_async
 
 def get_random_username():
     symbols = string.ascii_letters + string.digits
-    return "".join(random.choice(symbols) for i in range(7))
+    return "".join(random.choice(symbols) for _ in range(7))
 
 
 @sync_to_async
-def get_user(tg_id: int = None, user_id: int = None, username: str = None) -> User | None:
+def get_user(tg_id: int = None, user_id: int = None, username: str = None, phone: str = None) -> User | None:
     user = None
     if tg_id:
         user = User.objects.filter(tg_id=tg_id).first()
@@ -31,6 +29,8 @@ def get_user(tg_id: int = None, user_id: int = None, username: str = None) -> Us
         user = User.objects.filter(id=user_id).first()
     if username:
         user = User.objects.filter(username=username).first()
+    if phone:
+        user = User.objects.filter(phone=phone).first()
     return user
 
 
@@ -50,7 +50,7 @@ def get_or_create_user(
         else:
             user = User(
                 tg_id=tg_id,
-                username=username or get_random_username(),
+                username=username or (first_name + get_random_username()),
                 tg_username=username,
                 locale=locale,
                 first_name=first_name,
@@ -78,8 +78,8 @@ def create_user(first_name: str, last_name: str, phone: int, tg_id: int = None) 
 
 
 @sync_to_async
-def check_user_exists(username: str) -> bool:
-    return User.objects.filter(Q(username=username) | Q(tg_username=username)).exists()
+def check_user_exists(username: str = None, phone: str = None) -> bool:
+    return User.objects.filter(Q(username=username) | Q(tg_username=username) | Q(phone=phone)).exists()
 
 
 @sync_to_async
@@ -121,7 +121,7 @@ def get_provider_data(tg_id: int) -> dict | None:
 @sync_to_async
 def get_provider_days_off(tg_id: int) -> str:
     provider: Provider = User.objects.filter(tg_id=tg_id).first().provider
-    return provider.days_off
+    return provider.weekend
 
 
 @sync_to_async
@@ -296,7 +296,7 @@ def is_vacation(tg_id: int, day: date) -> bool:
 @sync_to_async
 def is_day_off(tg_id: int, day: date) -> bool:
     provider: Provider = User.objects.filter(tg_id=tg_id).first().provider
-    return str(day.weekday()) in provider.days_off
+    return str(day.weekday()) in provider.weekend
 
 
 @sync_to_async
@@ -338,10 +338,10 @@ def get_available_hours(
         raise ValueError
     day = date.today() + timedelta(days=offset)
 
-    available_slots, is_day_off, is_vacation = find_available_slots(
+    available_slots, _is_day_off, _is_vacation = find_available_slots(
         provider=provider, client=client, event_duration=service.duration, day=day
     )
-    return day, available_slots, is_day_off, is_vacation
+    return day, available_slots, _is_day_off, _is_vacation
 
 
 @sync_to_async

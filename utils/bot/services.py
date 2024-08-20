@@ -103,7 +103,7 @@ async def get_provider_clients_as_message(tg_id: id) -> str:
                 + next_reservation_str
             )
 
-        return "\n***\n\n".join(answer_message_list)  # TODO: finish handler for this
+        return "\n***\n\n".join(answer_message_list)
     else:
         return _("You have had no clients yet.")
 

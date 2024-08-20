@@ -16,7 +16,7 @@ class User(AbstractUser, TimeStampedModelMixin):
         null=True,
     )
     last_name = models.CharField(verbose_name="Last name", max_length=150, null=True, blank=True)
-    phone = models.CharField(verbose_name="Phone number", max_length=25, null=True, blank=True)
+    phone = models.CharField(verbose_name="Phone number", max_length=25, unique=True, null=True, blank=True)
     locale = models.CharField(verbose_name="Locale", max_length=10, blank=True, null=True)
     full_name = models.CharField(verbose_name="Full name", max_length=100, blank=True, null=True)
     provider_created = models.BooleanField(verbose_name="Provider created", default=False)
@@ -43,19 +43,8 @@ class Provider(models.Model, TimeStampedModelMixin):
     lunch_start = NormalizedTimeField(null=True, blank=True)
     lunch_end = NormalizedTimeField(null=True, blank=True)
     # String of numerical weekday values. Default: Saturday, Sunday (56).
-    days_off = models.CharField(verbose_name="Weekly days off", max_length=7, default="56", blank=True)
+    weekend = models.CharField(verbose_name="Weekly days off", max_length=7, default="56", blank=True)
     slot = NormalizedDurationField(default=15)
 
     def __str__(self):
         return f"{self.user}"
-
-
-class Company(models.Model, TimeStampedModelMixin):
-    name = models.CharField(verbose_name="Company name", max_length=50)
-
-    class Meta:
-        verbose_name_plural = "Companies"
-
-
-class Office(models.Model, TimeStampedModelMixin):
-    name = models.CharField(verbose_name="Office name", max_length=50)
