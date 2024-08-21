@@ -118,7 +118,7 @@ async def on_shutdown(bot: Bot):
     logging.info("Bye!")
 
 
-async def main_webhook():
+def main_webhook():
     setup_django()
 
     logging.basicConfig(
@@ -172,6 +172,6 @@ async def main():
 
 if __name__ == "__main__":
     try:
-        asyncio.run(main_webhook())
+        main_webhook()
     except (KeyboardInterrupt, SystemExit):
         logger.error("Bot stopped!")
