@@ -161,4 +161,4 @@ CURRENCY_CHOICES = [("USD", "USD $"), ("EUR", "EUR €"), ("UAH", "UAH ₴")]
 
 LOCALE_PATHS = [BASE_DIR / "locales"]
 
-ALLOWED_TG_USERS = env.list("ALLOWED_TG_USERS")
+ALLOWED_TG_USERS = env.list("ALLOWED_TG_USERS", [])
