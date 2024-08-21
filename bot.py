@@ -152,7 +152,7 @@ def main_webhook():
     web.run_app(app, host=WEB_SERVER_HOST, port=WEB_SERVER_PORT)
 
 
-async def main():
+async def main_polling():
     setup_django()
 
     logging.basicConfig(
@@ -171,7 +171,13 @@ async def main():
 
 
 if __name__ == "__main__":
-    try:
-        main_webhook()
-    except (KeyboardInterrupt, SystemExit):
-        logger.error("Bot stopped!")
+    if DEBUG:
+        try:
+            asyncio.run(main_polling())
+        except (KeyboardInterrupt, SystemExit):
+            logger.error("Bot stopped!")
+    else:
+        try:
+            main_webhook()
+        except (KeyboardInterrupt, SystemExit):
+            logger.error("Bot stopped!")
