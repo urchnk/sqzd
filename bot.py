@@ -62,6 +62,7 @@ bot = Bot(
     token=TOKEN,
     default=DefaultBotProperties(parse_mode=ParseMode.HTML),
 )
+bot.delete_webhook()
 dp = Dispatcher(storage=storage)
 
 if settings.DEBUG:
