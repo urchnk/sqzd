@@ -1,2 +1,2 @@
-web: gunicorn bot:app
+web: gunicorn bot:main
 release: python manage.py migrate --no-input
