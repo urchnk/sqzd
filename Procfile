@@ -1,2 +1,2 @@
-web: python main.py
+web: python bot.py
 release: python manage.py migrate --no-input
