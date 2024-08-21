@@ -112,7 +112,13 @@ async def on_startup(bot: Bot) -> None:
     )
 
 
-def main_webhook():
+async def on_shutdown():
+    logging.info("Shutting down...")
+    await bot.delete_webhook()
+    logging.info("Bye!")
+
+
+async def main_webhook():
     setup_django()
 
     logging.basicConfig(
@@ -124,6 +130,7 @@ def main_webhook():
     include_all_routers(dp)
 
     dp.startup.register(on_startup)
+    dp.shutdown.register(on_shutdown)
 
     app = web.Application()
 
@@ -171,4 +178,4 @@ if __name__ == "__main__":
             logger.error("Bot stopped!")
 
     else:
-        main_webhook()
+        asyncio.run(main_webhook())
