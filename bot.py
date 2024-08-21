@@ -38,9 +38,9 @@ if not DEBUG:
 
 # Webserver settings
 # bind localhost only to prevent any external access
-WEB_SERVER_HOST = "127.0.0.1"
+WEB_SERVER_HOST = "0.0.0.0"
 # Port for incoming request from reverse proxy. Should be any available port
-WEB_SERVER_PORT = 8080
+WEB_SERVER_PORT = env.int("PORT")
 
 # Path to webhook route, on which Telegram will send requests
 WEBHOOK_PATH = "/webhook"
@@ -112,7 +112,7 @@ async def on_startup(bot: Bot) -> None:
     )
 
 
-async def on_shutdown():
+async def on_shutdown(bot: Bot):
     logging.info("Shutting down...")
     await bot.delete_webhook()
     logging.info("Bye!")
