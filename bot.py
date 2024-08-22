@@ -27,13 +27,10 @@ _ = gettext
 TOKEN = env.str("BOT_TOKEN")
 ADMINS = env.list("ADMINS")
 
-DEBUG = env.bool("DEBUG")
-
-if not DEBUG:
-    HEROKU_APP_NAME = env.str("HEROKU_APP_NAME")
-    # Base URL for webhook will be used to generate webhook URL for Telegram,
-    # in this example it is used public address with TLS support
-    BASE_WEBHOOK_URL = f"https://{HEROKU_APP_NAME}.herokuapp.com"
+HEROKU_APP_NAME = env.str("HEROKU_APP_NAME")
+# Base URL for webhook will be used to generate webhook URL for Telegram,
+# in this example it is used public address with TLS support
+BASE_WEBHOOK_URL = f"https://{HEROKU_APP_NAME}.herokuapp.com"
 
 # Webserver settings
 # bind localhost only to prevent any external access
@@ -71,7 +68,6 @@ if settings.DEBUG:
 
 
 def include_all_routers(_dp: Dispatcher):
-    from tgbot.handlers.admin import admin_router
     from tgbot.handlers.clients_list import clients_list_router
     from tgbot.handlers.help import help_router
     from tgbot.handlers.menu import menu_router
@@ -86,7 +82,6 @@ def include_all_routers(_dp: Dispatcher):
     from tgbot.handlers.start import start_router
 
     _dp.include_routers(
-        # admin_router,
         clients_list_router,
         help_router,
         menu_router,
@@ -152,7 +147,10 @@ def main():
 
 
 if __name__ == "__main__":
-    try:
-        main()
-    except (KeyboardInterrupt, SystemExit):
-        logger.error("Bot stopped!")
+    if settings.DEBUG:
+        print("You cannot use webhooks locally atm. Use dev.py instead.")
+    else:
+        try:
+            main()
+        except (KeyboardInterrupt, SystemExit):
+            logger.error("Bot stopped!")
