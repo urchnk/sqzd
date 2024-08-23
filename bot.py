@@ -164,8 +164,6 @@ async def main_polling():
     )
     logger.info("Starting bot")
 
-    await set_default_commands()
-
     include_all_routers(dp)
 
     try:
@@ -183,6 +181,6 @@ if __name__ == "__main__":
             logger.error("Bot stopped!")
     else:
         try:
-            asyncio.run(main_webhooks())
+            main_webhooks()
         except (KeyboardInterrupt, SystemExit):
             logger.error("Bot stopped!")
