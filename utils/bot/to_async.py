@@ -3,10 +3,10 @@ import string
 from datetime import date, datetime, time, timedelta
 from decimal import Decimal
 from typing import Any, Union
+from zoneinfo import ZoneInfo
 
 from django.db.models import F, Q, QuerySet
 from django.forms import model_to_dict
-from django.utils import timezone
 
 from apps.roles.models import Provider, User
 from apps.scheduler.models import Break, Reservation, Vacation
@@ -42,6 +42,7 @@ def get_or_create_user(
     phone: str = None,
     username: str = None,
     locale: str = "uk",
+    tz: str | ZoneInfo = "Europe/Kyiv",
 ) -> User:
     if tg_id:
         user = User.objects.filter(tg_id=tg_id).first()
@@ -56,13 +57,20 @@ def get_or_create_user(
                 first_name=first_name,
                 last_name=last_name,
                 phone=phone,
+                tz=tz,
             )
             user.save()
             return user
 
 
 @sync_to_async
-def create_user(first_name: str, last_name: str, phone: int, tg_id: int = None) -> User:
+def create_user(
+    first_name: str,
+    last_name: str,
+    phone: int,
+    tg_id: int = None,
+    tz: str | ZoneInfo = "Europe/Kyiv",
+) -> User:
     random_username = first_name + get_random_username()
     while User.objects.filter(username=random_username).exists():
         random_username = first_name + get_random_username()
@@ -72,6 +80,7 @@ def create_user(first_name: str, last_name: str, phone: int, tg_id: int = None) 
         last_name=last_name,
         phone=phone,
         tg_id=tg_id,
+        tz=tz,
     )
     user.save()
     return user
@@ -95,6 +104,11 @@ def update_user(tg_id: int, **kwargs) -> User | None:
 def count_all_users() -> int:
     total = User.objects.all(is_active=True).count()
     return total
+
+
+@sync_to_async
+def get_tz(tg_id: int) -> ZoneInfo:
+    return User.objects.filter(tg_id=tg_id).first().tz
 
 
 @sync_to_async
@@ -177,27 +191,30 @@ def get_service_data(name: str, tg_id: int) -> dict | None:
 
 
 @sync_to_async
-def count_upcoming_service_reservations(service_id: int) -> int:
-    now = timezone.make_aware(datetime.now(), timezone.get_current_timezone())
+def count_upcoming_service_reservations(service_id: int, user_id: int) -> int:
+    tz = User.objects.filter(tg_id=user_id).first().tz
+    now = datetime.now(tz=tz)
     count = Reservation.objects.select_related("service").filter(service__pk=service_id, end__gt=now).count()
     return count
 
 
 @sync_to_async
-def count_past_service_reservations(service_id: int) -> int:
-    now = timezone.make_aware(datetime.now(), timezone.get_current_timezone())
+def count_past_service_reservations(service_id: int, user_id: int) -> int:
+    tz = User.objects.filter(tg_id=user_id).first().tz
+    now = datetime.now(tz=tz)
     count = Reservation.objects.select_related("service").filter(service__pk=service_id, start__lt=now).count()
     return count
 
 
 @sync_to_async
-def count_client_reservations_by_pk(provider_id: int, client_pk: int) -> tuple[int, int]:
-    now = timezone.make_aware(datetime.now(), timezone.get_current_timezone())
+def count_client_reservations_by_pk(provider_tg_id: int, client_pk: int) -> tuple[int, int]:
+    tz = User.objects.filter(tg_id=provider_tg_id).first().tz
+    now = datetime.now(tz=tz)
     past: int = (
         Reservation.objects.select_related("service", "provider")
         .filter(
             client__pk=client_pk,
-            provider__user__tg_id=provider_id,
+            provider__user__tg_id=provider_tg_id,
             start__lt=now,
         )
         .count()
@@ -206,7 +223,7 @@ def count_client_reservations_by_pk(provider_id: int, client_pk: int) -> tuple[i
         Reservation.objects.select_related("service")
         .filter(
             client__pk=client_pk,
-            provider__user__tg_id=provider_id,
+            provider__user__tg_id=provider_tg_id,
             start__gt=now,
         )
         .count()
@@ -215,7 +232,8 @@ def count_client_reservations_by_pk(provider_id: int, client_pk: int) -> tuple[i
 
 
 async def last_client_reservation(client_pk: int) -> Reservation | None:
-    now = timezone.make_aware(datetime.now(), timezone.get_current_timezone())
+    tz = User.objects.filter(pk=client_pk).first().tz
+    now = datetime.now(tz=tz)
     return (
         Reservation.objects.select_related("client")
         .filter(client__pk=client_pk, start__lt=now)
@@ -225,7 +243,8 @@ async def last_client_reservation(client_pk: int) -> Reservation | None:
 
 
 async def next_client_reservation(client_pk: int) -> Reservation | None:
-    now = timezone.make_aware(datetime.now(), timezone.get_current_timezone())
+    tz = User.objects.filter(pk=client_pk).first().tz
+    now = datetime.now(tz=tz)
     return (
         Reservation.objects.select_related("client")
         .filter(client__pk=client_pk, start__gt=now)
@@ -235,13 +254,14 @@ async def next_client_reservation(client_pk: int) -> Reservation | None:
 
 
 @sync_to_async
-def count_past_client_reservations(provider_id: int, client_id: int) -> int:
-    now = timezone.make_aware(datetime.now(), timezone.get_current_timezone())
+def count_past_client_reservations(provider_tg_id: int, client_id: int) -> int:
+    tz = User.objects.filter(tg_id=provider_tg_id).first().tz
+    now = datetime.now(tz=tz)
     count = (
         Reservation.objects.select_related("service")
         .filter(
             client__tg_id=client_id,
-            provider__tg_id=provider_id,
+            provider__tg_id=provider_tg_id,
             start__lt=now,
         )
         .count()
@@ -309,9 +329,9 @@ def get_provider_breaks_by_date(tg_id: int, day: date) -> Union[QuerySet, list[B
 def get_upcoming_provider_breaks(
     tg_id: int,
 ) -> Union[QuerySet, list[Break]] | None:
-    provider: Provider = User.objects.filter(tg_id=tg_id).first().provider
-    now = timezone.make_aware(datetime.now(), timezone.get_current_timezone())
-    breaks = Break.objects.filter(provider=provider, end__gte=now)
+    user = User.objects.filter(tg_id=tg_id).first()
+    now = datetime.now(tz=user.tz)
+    breaks = Break.objects.filter(provider=user.provider, end__gte=now)
     return breaks.values()
 
 
@@ -319,45 +339,51 @@ def get_upcoming_provider_breaks(
 def get_upcoming_provider_vacations(
     tg_id: int,
 ) -> Union[QuerySet, list[Vacation]] | None:
-    provider: Provider = User.objects.filter(tg_id=tg_id).first().provider
-    now = timezone.make_aware(datetime.now(), timezone.get_current_timezone())
-    return Vacation.objects.filter(provider=provider, end_date__gte=now.date()).values()
+    user = User.objects.filter(tg_id=tg_id).first()
+    now = datetime.now(tz=user.tz)
+    return Vacation.objects.filter(provider=user.provider, end_date__gte=now.date()).values()
 
 
 @sync_to_async
 def get_available_hours(
-    tg_id: int, service_name: str, client_id: int = None, client_tg_id: int = None, offset: int = 0
+    tg_id: int,
+    service_name: str,
+    client_id: int = None,
+    client_tg_id: int = None,
+    offset: int = 0,
+    client_tz: bool = True,
 ) -> Any:
-    provider: Provider = User.objects.filter(tg_id=tg_id).first().provider
-    service: Service = Service.objects.filter(name=service_name, providers=provider).first()
+    user = User.objects.filter(tg_id=tg_id).first()
+    service: Service = Service.objects.filter(name=service_name, providers=user.provider).first()
     if client_id:
         client = User.objects.filter(pk=client_id).first()
     elif client_tg_id:
         client = User.objects.filter(tg_id=client_tg_id).first()
     else:
         raise ValueError
-    day = date.today() + timedelta(days=offset)
+    day = datetime.now(tz=(client.tz if client_tz else user.tz)).date() + timedelta(days=offset)
 
     available_slots, _is_day_off, _is_vacation = find_available_slots(
-        provider=provider, client=client, event_duration=service.duration, day=day
+        provider=user.provider, client=client, event_duration=service.duration, day=day
     )
     return day, available_slots, _is_day_off, _is_vacation
 
 
 @sync_to_async
 def get_available_break_hours(tg_id: int, duration: int, offset: int = 0):
-    provider: Provider = User.objects.filter(tg_id=tg_id).first().provider
-    day: date = date.today() + timedelta(days=offset)
-    available_slots = find_available_slots(provider=provider, event_duration=duration, day=day)
-    return day, available_slots
+    user = User.objects.filter(tg_id=tg_id).first()
+    day = datetime.now(tz=user.tz).date() + timedelta(days=offset)
+    available_slots, is_weekend, is_vacation = find_available_slots(
+        provider=user.provider, event_duration=duration, day=day
+    )
+    return day, available_slots, is_weekend, is_vacation
 
 
 @sync_to_async
 def get_provider_events_by_offset(tg_id: int, offset: int = 0) -> Any:
-    provider: Provider = User.objects.filter(tg_id=tg_id).first().provider
-    to_tz = timezone.get_current_timezone()  # TODO: handle timezones
-    day = timezone.make_aware(datetime.now(), to_tz).date() + timedelta(days=offset)
-    events = get_events_by_day(provider=provider, day=day)
+    user = User.objects.filter(tg_id=tg_id).first()
+    day = datetime.now(tz=user.tz).date() + timedelta(days=offset)
+    events = get_events_by_day(provider=user.provider, day=day)
 
     return day, events
 
@@ -380,7 +406,8 @@ def set_reservation(client: User, provider: Provider, service_id: int, start: da
 @sync_to_async
 def set_break(provider: Provider, start: datetime, duration: int) -> Break:
     end = start + timedelta(minutes=duration)
-    new_break = Break(provider=provider, start=start, end=end).save()
+    new_break = Break(provider=provider, start=start, end=end)
+    new_break.save()
     return new_break
 
 
@@ -464,7 +491,7 @@ def get_reservation(identifier: int) -> Reservation:
 @sync_to_async
 def get_client_reservations(tg_id: int, is_past: bool = False) -> Union[QuerySet, list[Reservation]] | None:
     client = User.objects.filter(tg_id=tg_id).first()
-    now = timezone.make_aware(datetime.now(), timezone.get_current_timezone())
+    now = datetime.now(tz=client.tz)
 
     # Both upcoming and past reservations here include an ongoing one if there is such.
     if not is_past:

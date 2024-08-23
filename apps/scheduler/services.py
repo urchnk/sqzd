@@ -2,15 +2,14 @@ from datetime import date, datetime, timedelta
 from typing import Any
 
 from django.db.models import F
-from django.utils import timezone
 
 from apps.roles.models import Provider, User
 from apps.scheduler.models import Break, Reservation, Vacation
 
 
 def get_events_by_day(provider: Provider = None, client: User = None, day: date = date.today()) -> list:
-    to_tz = timezone.get_current_timezone()  # TODO: handle timezones
-    now = timezone.make_aware(datetime.now(), to_tz) + timedelta(minutes=5)
+    tz = provider.user.tz
+    now = datetime.now(tz=tz) + timedelta(minutes=5)
     qs = Reservation.objects.select_related("provider", "client", "service").filter(date=day, is_canceled=False)
     provider_res = qs.filter(provider=provider) if provider else Reservation.objects.none()
     client_res = qs.filter(client=client) if client else Reservation.objects.none()
@@ -33,8 +32,8 @@ def get_events_by_day(provider: Provider = None, client: User = None, day: date 
     reserved_unsorted = reservations + breaks
     if provider.lunch_start and provider.lunch_end:
         lunch = {
-            "start": timezone.make_aware(datetime.combine(date=day, time=provider.lunch_start), to_tz),
-            "end": timezone.make_aware(datetime.combine(date=day, time=provider.lunch_end), to_tz),
+            "start": datetime.combine(date=day, time=provider.lunch_start).replace(tzinfo=tz),
+            "end": datetime.combine(date=day, time=provider.lunch_end).replace(tzinfo=tz),
             "is_lunch": True,
         }
         reserved_unsorted.append(lunch)
@@ -53,22 +52,22 @@ def find_available_slots(
     event_duration: int = 15,
     day: date = date.today(),
 ) -> tuple[list[datetime], bool, bool]:
-    to_tz = timezone.get_current_timezone()  # TODO: handle timezones
-    now = timezone.now() + timedelta(minutes=5)
+    tz = provider.user.tz
+    now = datetime.now(tz=tz) + timedelta(minutes=5)
 
     events = get_events_by_day(provider=provider, client=client, day=day)
     duration = timedelta(minutes=event_duration)
     slot_duration = timedelta(minutes=provider.slot)
 
-    start_time = get_start_time(provider, day, to_tz, now, duration)
-    end_time = timezone.make_aware(datetime.combine(day, provider.end), to_tz)
+    start_time = get_start_time(provider, day, now, duration)
+    end_time = datetime.combine(day, provider.end).astimezone(tz=tz)
 
     available_slots = []
     cursor = start_time
 
     for event in events:
-        event_start = event["start"].astimezone(to_tz)
-        event_end = event["end"].astimezone(to_tz)
+        event_start = event["start"]
+        event_end = event["end"]
 
         while event_start - cursor >= duration:
             available_slots.append(cursor)
@@ -79,7 +78,7 @@ def find_available_slots(
         available_slots.append(cursor)
         cursor += slot_duration
 
-    return available_slots, day.weekday() in get_weekend(provider), is_vacation(provider.user.tg_id, day)
+    return available_slots, (day.weekday() in get_weekend(provider)), is_vacation(provider.user.tg_id, day)
 
 
 def is_day_unavailable(provider: Provider, day: date, now: datetime, duration: int) -> bool:
@@ -89,7 +88,7 @@ def is_day_unavailable(provider: Provider, day: date, now: datetime, duration: i
     if is_vacation(provider.user.tg_id, day):
         return True
 
-    end_time = timezone.make_aware(datetime.combine(day, provider.end), timezone.get_current_timezone())
+    end_time = datetime.combine(day, provider.end).replace(tzinfo=provider.user.tz)
     if day == now.date() and now > (end_time - timedelta(minutes=duration)):
         return True
 
@@ -101,11 +100,12 @@ def get_weekend(provider: Provider) -> list[int]:
     return weekend  # TODO: de-hardcode weekends handling (or maybe not?)
 
 
-def get_start_time(provider: Provider, day: date, to_tz: timezone, now: datetime, duration: timedelta) -> datetime:
-    start_time = timezone.make_aware(datetime.combine(day, provider.start), to_tz)
+def get_start_time(provider: Provider, day: date, now: datetime, duration: timedelta) -> datetime:
+    tz = provider.user.tz
+    start_time = datetime.combine(day, provider.start).replace(tzinfo=tz)
 
     if day == now.date():
-        end_time = timezone.make_aware(datetime.combine(day, provider.end), to_tz)
+        end_time = datetime.combine(day, provider.end).replace(tzinfo=tz)
         available_time = end_time - now
         slot_count = int(available_time / duration)
         return max(start_time, end_time - (duration * slot_count))
@@ -114,7 +114,7 @@ def get_start_time(provider: Provider, day: date, to_tz: timezone, now: datetime
 
 
 async def get_provider_week_overview(provider: Provider, offset: int = 0) -> list[dict[str, Any]]:
-    today = timezone.now().date()
+    today = datetime.now(tz=provider.user.tz).date()
     start_date = today + timedelta(days=offset)
     end_date = start_date + timedelta(days=6)  # 7 days total, including start_date
 

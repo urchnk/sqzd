@@ -9,6 +9,7 @@ django-environ = "*"
 django-extensions = "*"
 django-modeltranslation = "*"
 django-money = "*"
+django-timezone-field = "*"
 email-validator = "*"
 environs = "*"
 gunicorn = "*"
@@ -17,6 +18,9 @@ phonenumbers = "*"
 psycopg2-binary = "*"
 py-moneyed = "*"
 pytz = "*"
+
+[dev]
+black = "*"
 
 [requires]
 python_version = "3.12"

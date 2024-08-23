@@ -3,6 +3,7 @@ from datetime import time
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+from timezone_field import TimeZoneField
 from utils.db import NormalizedDurationField, NormalizedTimeField, TimeStampedModelMixin
 
 
@@ -20,6 +21,7 @@ class User(AbstractUser, TimeStampedModelMixin):
     locale = models.CharField(verbose_name="Locale", max_length=10, blank=True, null=True)
     full_name = models.CharField(verbose_name="Full name", max_length=100, blank=True, null=True)
     provider_created = models.BooleanField(verbose_name="Provider created", default=False)
+    tz = TimeZoneField(verbose_name="Timezone", use_pytz=False, default="Europe/Kyiv")
 
     def save(self, *args, **kwargs):
         if not self.last_name:

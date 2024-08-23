@@ -13,6 +13,7 @@ from utils.bot.to_async import (
     count_upcoming_service_reservations,
     get_provider_services,
     get_service_data,
+    get_tz,
     is_provider,
     remove_service,
     update_service,
@@ -46,8 +47,14 @@ async def list_services_for_removal(message: Message, state: FSMContext):
 @service_remove_router.message(RemoveServiceStatesGroup.choose_service, IsProviderFilter())
 async def choosing_service_to_remove(message: Message, state: FSMContext):
     service_data = await get_service_data(message.text, message.from_user.id)
-    upcoming_reservations_count = await count_upcoming_service_reservations(service_data["id"])
-    past_reservations_count = await count_past_service_reservations(service_data["id"])
+    upcoming_reservations_count = await count_upcoming_service_reservations(
+        service_id=service_data["id"],
+        user_id=message.from_user.id,
+    )
+    past_reservations_count = await count_past_service_reservations(
+        service_id=service_data["id"],
+        user_id=message.from_user.id,
+    )
 
     if upcoming_reservations_count or past_reservations_count:
         reply_message = _("This service has:\n")
@@ -79,12 +86,13 @@ async def confirmation_deactivate_service(message: Message, state: FSMContext):
     service_id = state_data["service_id"]
     service_name = state_data["service_name"]
     markup = get_provider_main_menu()
+    tz = await get_tz(message.from_user.id)
     if message.text == _("Yes"):
         await update_service(
             pk=service_id,
             name=_("{service_name} (deactivated {now})").format(
-                service_name=service_name, now=datetime.datetime.now().strftime(_(""))
-            ),  # TODO: Check user's timezone
+                service_name=service_name, now=datetime.datetime.now(tz=tz).strftime(_(""))
+            ),
             is_active=False,
         )
         await state.clear()

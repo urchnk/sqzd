@@ -1,5 +1,3 @@
-from django.utils import timezone
-
 from bot import _
 from moneyed import format_money
 from utils.bot.consts import DATE_FORMAT, DATE_TIME_FORMAT, TIME_FORMAT, wds, weekdays
@@ -10,6 +8,7 @@ from utils.bot.to_async import (
     get_provider_data,
     get_provider_events_by_offset,
     get_provider_services,
+    get_tz,
     get_upcoming_provider_breaks,
     get_upcoming_provider_vacations,
     get_user,
@@ -17,8 +16,6 @@ from utils.bot.to_async import (
     last_client_reservation,
     next_client_reservation,
 )
-
-to_tz = timezone.get_current_timezone()  # TODO: handle timezones
 
 
 async def get_provider_services_as_message(tg_id: int) -> str:
@@ -37,6 +34,7 @@ async def get_provider_services_as_message(tg_id: int) -> str:
 
 
 async def get_client_reservations_as_message(tg_id: int, is_past: bool = False) -> str:
+    tz = await get_tz(tg_id)
     reservations = await get_client_reservations(tg_id, is_past=is_past)
     if not is_past:
         reply_no = _("You have no upcoming reservations.")
@@ -45,8 +43,8 @@ async def get_client_reservations_as_message(tg_id: int, is_past: bool = False) 
     if reservations:
         answer_message_list = []
         for reservation in reservations:
-            weekday = reservation["start"].astimezone(to_tz).strftime("%A")
-            start_datetime = reservation["start"].astimezone(to_tz).strftime(DATE_TIME_FORMAT)
+            weekday = reservation["start"].astimezone(tz).strftime("%A")
+            start_datetime = reservation["start"].astimezone(tz).strftime(DATE_TIME_FORMAT)
             service = reservation["service_name"]
             name = reservation["full_name"]
             username = reservation["tg_username"]
@@ -66,6 +64,7 @@ async def get_client_reservations_as_message(tg_id: int, is_past: bool = False) 
 
 
 async def get_provider_clients_as_message(tg_id: id) -> str:
+    tz = await get_tz(tg_id)
     clients = await get_provider_clients(tg_id)
     if clients:
         answer_message_list = []
@@ -77,11 +76,11 @@ async def get_provider_clients_as_message(tg_id: id) -> str:
             )
             last_reservation = await last_client_reservation(client.pk)
             last_reservation_str = (
-                (last_reservation.start.astimezone(to_tz).strftime(DATE_TIME_FORMAT)) if last_reservation else "-\n"
+                (last_reservation.start.astimezone(tz).strftime(DATE_TIME_FORMAT)) if last_reservation else "-\n"
             )
             next_reservation = await next_client_reservation(client.pk)
             next_reservation_str = (
-                (next_reservation.start.astimezone(to_tz).strftime(DATE_TIME_FORMAT)) if next_reservation else "-\n"
+                (next_reservation.start.astimezone(tz).strftime(DATE_TIME_FORMAT)) if next_reservation else "-\n"
             )
             answer_message_list.append(
                 "👤 "
@@ -109,6 +108,7 @@ async def get_provider_clients_as_message(tg_id: id) -> str:
 
 
 async def get_provider_events_as_message(tg_id: int, offset: int) -> str:
+    tz = await get_tz(tg_id)
     day, events = await get_provider_events_by_offset(tg_id, offset)
     events_list = ["🗓 <b>" + (_(day.strftime("%A")) + ", " + day.strftime(DATE_FORMAT) + "</b>")]
 
@@ -116,7 +116,7 @@ async def get_provider_events_as_message(tg_id: int, offset: int) -> str:
         events_list.append(_("No appointments."))
 
     for event in events:
-        time = f'⌚️ {event["start"].astimezone(to_tz).strftime(TIME_FORMAT)} - {event["end"].astimezone(to_tz).strftime(TIME_FORMAT)}\n'
+        time = f'⌚️ {event["start"].astimezone(tz).strftime(TIME_FORMAT)} - {event["end"].astimezone(tz).strftime(TIME_FORMAT)}\n'
         if "client_name" in event:
             service = event["service_name"] + "\n"
             name = "👤 " + event["client_name"] + "\n"
@@ -132,6 +132,7 @@ async def get_provider_events_as_message(tg_id: int, offset: int) -> str:
 
 async def get_provider_breaks_as_message(tg_id: int) -> str:
     breaks = await get_upcoming_provider_breaks(tg_id)
+    tz = await get_tz(tg_id)
     if breaks:
         breaks_list = ["⏳ <b>" + _("Upcoming breaks:") + "</b>\n"]
         for brk in breaks:
@@ -141,9 +142,9 @@ async def get_provider_breaks_as_message(tg_id: int) -> str:
                 + ", "
                 + brk["date"].strftime(DATE_FORMAT)
                 + ", "
-                + brk["start"].astimezone(to_tz).strftime(TIME_FORMAT)
+                + brk["start"].astimezone(tz).strftime(TIME_FORMAT)
                 + " - "
-                + brk["end"].astimezone(to_tz).strftime(TIME_FORMAT)
+                + brk["end"].astimezone(tz).strftime(TIME_FORMAT)
             )
 
         return "\n".join(breaks_list)

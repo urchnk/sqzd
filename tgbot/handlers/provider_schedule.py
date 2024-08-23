@@ -1,7 +1,5 @@
 from datetime import datetime
 
-from django.utils import timezone
-
 from aiogram import F, Router
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
@@ -12,13 +10,11 @@ from tgbot.filters.provider import IsProviderFilter
 from tgbot.keyboards.default import (
     get_provider_clients_keyboard,
     get_provider_main_menu,
-    get_provider_reservations_menu,
     get_provider_services_keyboard,
 )
 from utils.bot.consts import DATE_FORMAT, TIME_FORMAT, weekdays
 from utils.bot.services import get_provider_events_as_message
 from utils.bot.to_async import (
-    check_user_exists,
     create_user,
     get_available_hours,
     get_or_create_user,
@@ -255,8 +251,8 @@ async def provider_new_reservation_choose_datetime(message: Message, state: FSMC
         service_data = await get_service_data(state_data["service_name"], provider_id)
         weekday, strdate, strtime = message.text.split(", ")
         start_unaware = datetime.strptime((strdate + strtime), DATE_FORMAT + TIME_FORMAT)
-        tz = timezone.get_current_timezone()
-        start = timezone.make_aware(start_unaware, tz)
+        tz = provider.uzer.tz
+        start = start_unaware.replace(tzinfo=tz)
         await set_reservation(
             client=client,
             provider=provider,

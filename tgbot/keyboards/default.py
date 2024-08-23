@@ -87,19 +87,6 @@ def get_provider_services_menu():
     )
 
 
-def get_provider_reservations_menu():
-    return types.ReplyKeyboardMarkup(
-        keyboard=[
-            [
-                KeyboardButton(text=_("All reservations")),
-                KeyboardButton(text=_("New reservation")),
-            ],
-            [KeyboardButton(text=_("Back to main menu"))],
-        ],
-        resize_keyboard=True,
-    )
-
-
 async def get_provider_clients_keyboard(tg_id: int, offset: int = 0):
     markup = types.ReplyKeyboardMarkup(keyboard=[[]], resize_keyboard=True)
     all_clients = [client for client in (await get_provider_clients(tg_id))]

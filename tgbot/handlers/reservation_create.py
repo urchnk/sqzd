@@ -1,7 +1,5 @@
 from datetime import datetime
 
-from django.utils import timezone
-
 from aiogram import Router
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
@@ -70,8 +68,8 @@ async def datetime_selection_or_complete_booking(message: Message, state: FSMCon
         service_data = await get_service_data(state_data["service_name"], provider_id)
         weekday, strdate, strtime = message.text.split(", ")
         start_unaware = datetime.strptime((strdate + strtime), DATE_FORMAT + TIME_FORMAT)
-        tz = timezone.get_current_timezone()
-        start = timezone.make_aware(start_unaware, tz)
+        tz = client.tz
+        start = start_unaware.replace(tzinfo=tz)
         await set_reservation(
             client=client,
             provider=provider,

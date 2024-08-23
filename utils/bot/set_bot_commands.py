@@ -1,10 +1,10 @@
 from aiogram.types import BotCommand
 
 
-async def set_default_commands(dp):
-    from bot import _
+async def set_default_commands():
+    from bot import _, bot
 
-    await dp.bot.set_my_commands(
+    await bot.set_my_commands(
         [
             BotCommand(command="start", description=_("Start bot")),
             BotCommand(command="register_provider", description=_("Become a provider")),

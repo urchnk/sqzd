@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import asyncio
 import logging
 import os
 
@@ -15,6 +16,7 @@ import environ
 from aiohttp import web
 from dotenv import load_dotenv
 from tgbot.middlewares.debug import AllowedUsersMiddleware
+from utils.bot.set_bot_commands import set_default_commands
 
 load_dotenv()
 env = environ.Env()
@@ -96,6 +98,11 @@ def include_all_routers(_dp: Dispatcher):
         provider_settings_router,
     )
 
+    # Outcomment for local debugging only!
+    # if settings.DEBUG:
+    #     from tgbot.handlers.admin import admin_router
+    #     # _dp.include_routers(admin_router)
+
 
 async def on_startup(bot: Bot) -> None:
     # In case when you have a self-signed SSL certificate, you need to send the certificate
@@ -114,7 +121,7 @@ async def on_shutdown(bot: Bot):
     logging.info("Bye!")
 
 
-def main():
+async def main_webhooks():
     setup_django()
 
     logging.basicConfig(
@@ -122,6 +129,8 @@ def main():
         format="%(filename)s:%(lineno)d #%(levelname)-8s [%(asctime)s] - %(name)s - %(message)s",
     )
     logger.info("Starting bot")
+
+    await set_default_commands()
 
     include_all_routers(dp)
 
@@ -146,11 +155,34 @@ def main():
     web.run_app(app, host=WEB_SERVER_HOST, port=WEB_SERVER_PORT)
 
 
+async def main_polling():
+    setup_django()
+
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(filename)s:%(lineno)d #%(levelname)-8s [%(asctime)s] - %(name)s - %(message)s",
+    )
+    logger.info("Starting bot")
+
+    await set_default_commands()
+
+    include_all_routers(dp)
+
+    try:
+        await dp.start_polling(bot)
+    finally:
+        await dp.storage.close()
+        await bot.session.close()
+
+
 if __name__ == "__main__":
     if settings.DEBUG:
-        print("You cannot use webhooks locally atm. Use dev.py instead.")
+        try:
+            asyncio.run(main_polling())
+        except (KeyboardInterrupt, SystemExit):
+            logger.error("Bot stopped!")
     else:
         try:
-            main()
+            asyncio.run(main_webhooks())
         except (KeyboardInterrupt, SystemExit):
             logger.error("Bot stopped!")

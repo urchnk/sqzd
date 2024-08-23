@@ -1,7 +1,5 @@
 from datetime import date, datetime
 
-from django.utils import timezone
-
 from aiogram import F, Router
 from aiogram.filters import or_f
 from aiogram.fsm.context import FSMContext
@@ -32,6 +30,7 @@ from utils.bot.to_async import (
     get_available_break_hours,
     get_provider,
     get_provider_days_off,
+    get_tz,
     get_upcoming_provider_breaks,
     is_day_off,
     is_vacation,
@@ -247,14 +246,14 @@ async def set_a_break_time(message: Message, state: FSMContext):
         time_string = message.text.split(" ")[1]
         start_unaware = datetime.combine(day, datetime.strptime(time_string, TIME_INPUT_FORMAT).time())
         duration = state_data["duration"]
-        tz = timezone.get_current_timezone()
-        start = timezone.make_aware(start_unaware, tz)
-        await set_break(provider=provider, start=start, duration=duration)
+        tz = await get_tz(message.from_user.id)
+        start = start_unaware.replace(tzinfo=tz)
+        _break = await set_break(provider=provider, start=start, duration=duration)
         await state.clear()
         weekday = _(weekdays[day.weekday()])
         message_list = [
             _("You have set a break:"),
-            weekday + ", " + day.strftime(DATE_FORMAT) + ", " + time_string,
+            weekday + ", " + day.strftime(DATE_FORMAT) + ", " + _break.start.strftime(TIME_FORMAT),
         ]
         markup = await get_main_menu(message.from_user.id)
         await message.answer(
@@ -297,7 +296,9 @@ async def set_a_break_time(message: Message, state: FSMContext):
     else:
         duration = state_data["duration"]
 
-    day, available_slots = await get_available_break_hours(message.from_user.id, duration, offset=offset)
+    day, available_slots, is_weekend, is_vacation = await get_available_break_hours(
+        message.from_user.id, duration, offset=offset
+    )
     await state.update_data(day=day)
     markup = ReplyKeyboardMarkup(keyboard=[[]], resize_keyboard=True, one_time_keyboard=True)
     row = [_("Previous day")]
@@ -306,22 +307,21 @@ async def set_a_break_time(message: Message, state: FSMContext):
     row.append(_("Next day"))
     markup.keyboard.append(row)
 
-    for slot in available_slots:
-        time_string = slot.strftime(TIME_FORMAT)
-        button = KeyboardButton(text=f"🕑 {time_string}")
-        markup.keyboard.append([button])
-
     day_string = _(weekdays[day.weekday()]) + ", " + day.strftime(DATE_FORMAT)
 
     if not available_slots:
-        if await is_vacation(message.from_user.id, day):
+        if is_vacation:
             reply_message = day_string + "\n" + _("You have a vacation.")
-        elif await is_day_off(message.from_user.id, day):
+        elif is_weekend:
             reply_message = day_string + "\n" + _("You have a day-off.")
         else:
-            reply_message = day_string + "\n" + _("You have an insufficiently tight schedule for this day.")
+            reply_message = day_string + "\n" + _("There is no available slot on this day.")
             markup.keyboard.append([_("See schedule")])
     else:
+        for slot in available_slots:
+            time_string = slot.strftime(TIME_FORMAT)
+            button = KeyboardButton(text=f"🕑 {time_string}")
+            markup.keyboard.append([button])
         reply_message = day_string + "\n" + _("Please, select the desirable date and time of the break.")
 
     markup.keyboard.append([_("Cancel")])
