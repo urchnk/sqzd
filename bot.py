@@ -121,7 +121,7 @@ async def on_shutdown(bot: Bot):
     logging.info("Bye!")
 
 
-async def main_webhooks():
+def main_webhooks():
     setup_django()
 
     logging.basicConfig(
@@ -129,8 +129,6 @@ async def main_webhooks():
         format="%(filename)s:%(lineno)d #%(levelname)-8s [%(asctime)s] - %(name)s - %(message)s",
     )
     logger.info("Starting bot")
-
-    await set_default_commands()
 
     include_all_routers(dp)
 
@@ -163,6 +161,8 @@ async def main_polling():
         format="%(filename)s:%(lineno)d #%(levelname)-8s [%(asctime)s] - %(name)s - %(message)s",
     )
     logger.info("Starting bot")
+
+    await set_default_commands()
 
     include_all_routers(dp)
 
