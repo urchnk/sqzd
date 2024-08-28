@@ -18,6 +18,7 @@ phonenumbers = "*"
 psycopg2-binary = "*"
 py-moneyed = "*"
 pytz = "*"
+requests = "*"
 
 [dev]
 black = "*"

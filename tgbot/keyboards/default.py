@@ -3,6 +3,7 @@ from datetime import time, timedelta
 from aiogram import types
 from aiogram.types import KeyboardButton
 
+import moneyed
 from bot import _
 from utils.bot.consts import TIME_INPUT_FORMAT
 from utils.bot.to_async import get_provider_clients, get_provider_data, get_provider_services, is_provider
@@ -200,6 +201,38 @@ def get_duration_choices_keyboard():
                 KeyboardButton(text="60"),
                 KeyboardButton(text="90"),
                 KeyboardButton(text="120"),
+            ],
+        ],
+        resize_keyboard=True,
+    )
+
+
+def get_currencies_keyboard():
+    return types.ReplyKeyboardMarkup(
+        keyboard=[
+            [
+                KeyboardButton(text=_("Ukrainian Hryvnia") + ", UAH"),
+                KeyboardButton(text=_("Euro") + ", EUR"),
+            ],
+            [
+                KeyboardButton(text=_("Polish Zloty") + ", PLN"),
+                KeyboardButton(text=_("Czech Koruna") + ", CZK"),
+            ],
+            [
+                KeyboardButton(text=_("US Dollar") + ", USD"),
+                KeyboardButton(text=_("Canadian dollar") + ", CAD"),
+            ],
+            [
+                KeyboardButton(text=_("British Pound") + ", GBP"),
+                KeyboardButton(text=_("Swedish Krona") + ", SEK"),
+            ],
+            [
+                KeyboardButton(text=_("Norwegian Krone'") + ", NOK"),
+                KeyboardButton(text=_("Danish Krone") + ", DKK"),
+            ],
+            [
+                KeyboardButton(text=_("Romanian Leu") + ", RON"),
+                KeyboardButton(text=_("Moldovan Leu") + ", MDL"),
             ],
         ],
         resize_keyboard=True,

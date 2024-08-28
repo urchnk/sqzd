@@ -1,6 +1,6 @@
 from bot import _
 from moneyed import format_money
-from utils.bot.consts import DATE_FORMAT, DATE_TIME_FORMAT, TIME_FORMAT, wds, weekdays
+from utils.bot.consts import DATE_FORMAT, DATE_TIME_FORMAT, TIME_FORMAT, WDS, WEEKDAYS
 from utils.bot.to_async import (
     count_client_reservations_by_pk,
     get_client_reservations,
@@ -138,7 +138,7 @@ async def get_provider_breaks_as_message(tg_id: int) -> str:
         for brk in breaks:
             date_dud = "date"
             breaks_list.append(
-                _(weekdays[brk[date_dud].weekday()])
+                _(WEEKDAYS[brk[date_dud].weekday()])
                 + ", "
                 + brk["date"].strftime(DATE_FORMAT)
                 + ", "
@@ -192,6 +192,6 @@ async def get_provider_days_off_as_message(tg_id: int) -> str | None:
     provider_data = await get_provider_data(tg_id)
     if provider_data.get("days_off"):
         days_off_list = [i for i in provider_data["days_off"]]
-        return "⛔️ <b>" + _("Days off: ") + "</b>" + ", ".join([wds[int(day)] for day in days_off_list])
+        return "⛔️ <b>" + _("Days off: ") + "</b>" + ", ".join([WDS[int(day)] for day in days_off_list])
     else:
         return "⛔️ <b>" + _("You have not set your weekly days off yet.") + "</b>"

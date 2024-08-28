@@ -5,7 +5,7 @@ TIME_FORMAT = _("%I:%M %p")
 TIME_INPUT_FORMAT = _("%H:%M")
 DATE_TIME_FORMAT = _("%m/%d/%Y, %I:%M %p")
 
-wds = {
+WDS = {
     0: _("Mon"),
     1: _("Tue"),
     2: _("Wen"),
@@ -15,7 +15,7 @@ wds = {
     6: _("Sun"),
 }
 
-wds_rev = {
+WDS_REV = {
     _("Mon"): 0,
     _("Tue"): 1,
     _("Wen"): 2,
@@ -25,7 +25,7 @@ wds_rev = {
     _("Sun"): 6,
 }
 
-weekdays = {
+WEEKDAYS = {
     0: _("Monday"),
     1: _("Tuesday"),
     2: _("Wednesday"),

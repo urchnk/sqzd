@@ -17,7 +17,7 @@ from tgbot.keyboards.default import (
     get_provider_recurring_schedule_menu,
     yes_no,
 )
-from utils.bot.consts import DATE_FORMAT, TIME_FORMAT, TIME_INPUT_FORMAT, wds, wds_rev, weekdays
+from utils.bot.consts import DATE_FORMAT, TIME_FORMAT, TIME_INPUT_FORMAT, WDS, WDS_REV, WEEKDAYS
 from utils.bot.services import (
     get_provider_breaks_as_message,
     get_provider_days_off_as_message,
@@ -167,11 +167,11 @@ async def finish_edit_days_off(message: Message, state: FSMContext):
     days_off = await get_provider_days_off(message.from_user.id)
     reply_message = ""
     if message.text.split(" ")[0] == "❌":
-        days_off.replace(str(wds_rev[message.text.split(" ")[1]]), "")
+        days_off.replace(str(WDS_REV[message.text.split(" ")[1]]), "")
         await update_provider(message.from_user.id, days_off="".join(sorted(days_off)))
 
     elif message.text.split(" ")[0] == "✅":
-        days_off += str(wds_rev[message.text.split(" ")[1]])
+        days_off += str(WDS_REV[message.text.split(" ")[1]])
         await update_provider(message.from_user.id, days_off="".join(sorted(days_off)))
 
     elif message.text == _("Yes"):
@@ -194,7 +194,7 @@ async def finish_edit_days_off(message: Message, state: FSMContext):
             emoji = "❌"
         else:
             emoji = "✅"
-        markup.keyboard.append([KeyboardButton(text=f"{emoji} {_(wds[i])}")])
+        markup.keyboard.append([KeyboardButton(text=f"{emoji} {_(WDS[i])}")])
 
     markup.keyboard.append([_("Back to recurring schedule settings")])
     reply_message += _("Switch ✅(working day) / ❌(day off).")
@@ -250,7 +250,7 @@ async def set_a_break_time(message: Message, state: FSMContext):
         start = start_unaware.replace(tzinfo=tz)
         _break = await set_break(provider=provider, start=start, duration=duration)
         await state.clear()
-        weekday = _(weekdays[day.weekday()])
+        weekday = _(WEEKDAYS[day.weekday()])
         message_list = [
             _("You have set a break:"),
             weekday + ", " + day.strftime(DATE_FORMAT) + ", " + _break.start.strftime(TIME_FORMAT),
@@ -307,7 +307,7 @@ async def set_a_break_time(message: Message, state: FSMContext):
     row.append(_("Next day"))
     markup.keyboard.append(row)
 
-    day_string = _(weekdays[day.weekday()]) + ", " + day.strftime(DATE_FORMAT)
+    day_string = _(WEEKDAYS[day.weekday()]) + ", " + day.strftime(DATE_FORMAT)
 
     if not available_slots:
         if is_vacation:
@@ -351,7 +351,7 @@ async def cancel_break(message: Message, state: FSMContext):
         start = _break["start"]
         message_list = [
             "❌",
-            _(wds[start.date().weekday()]),
+            _(WDS[start.date().weekday()]),
             start.strftime(DATE_FORMAT),
             start.strftime(TIME_FORMAT),
             f"#{_break['id']}",
@@ -399,7 +399,7 @@ async def edit_days_off(message: Message, state: FSMContext):
     week = await get_provider_week_overview(provider, offset)
     for day in week:
         _date = day["date"]
-        message_list = [day["emoji"], _(wds[_date.weekday()]), day["date"].strftime(DATE_FORMAT)]
+        message_list = [day["emoji"], _(WDS[_date.weekday()]), day["date"].strftime(DATE_FORMAT)]
         markup.keyboard.append([KeyboardButton(text=" ".join(message_list))])
 
     markup.keyboard.append([_("Back to breaks & days off")])

@@ -156,8 +156,7 @@ STATIC_URL = "/static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-CURRENCIES = ("USD", "EUR", "UAH")
-CURRENCY_CHOICES = [("USD", "USD $"), ("EUR", "EUR €"), ("UAH", "UAH ₴")]
+CURRENCIES = {"CAD", "CHF", "CZK", "DKK", "SEK", "NOK", "EUR", "GBP", "MDL", "PLN", "RON", "UAH", "USD"}
 
 LOCALE_PATHS = [BASE_DIR / "locales"]
 

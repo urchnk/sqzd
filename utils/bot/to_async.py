@@ -145,9 +145,14 @@ def add_provider_to_user(
     phone: str = None,
     start: time = None,
     end: time = None,
+    tz: str = None,
+    currency: str = None,
 ) -> Provider:
     user = User.objects.filter(tg_id=tg_id).first()
-    provider = Provider.objects.create(user=user, email=email, phone=phone, start=start, end=end)
+    if tz:
+        user.tz = tz
+        user.save()
+    provider = Provider.objects.create(user=user, email=email, phone=phone, start=start, end=end, currency=currency)
     return provider
 
 

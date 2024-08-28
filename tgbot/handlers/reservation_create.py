@@ -7,7 +7,7 @@ from aiogram.types import KeyboardButton, Message, ReplyKeyboardMarkup
 
 from bot import _, bot
 from tgbot.keyboards.default import get_client_main_menu, get_provider_services_keyboard, yes_no
-from utils.bot.consts import DATE_FORMAT, TIME_FORMAT, weekdays
+from utils.bot.consts import DATE_FORMAT, TIME_FORMAT, WEEKDAYS
 from utils.bot.to_async import get_available_hours, get_provider, get_service_data, get_user, set_reservation
 
 reservation_create_router = Router()
@@ -59,7 +59,7 @@ async def datetime_selection_or_complete_booking(message: Message, state: FSMCon
             reply_markup=(await get_client_main_menu(message.from_user.id)),
         )
         return
-    elif message.text.split(",")[0] in weekdays.values():
+    elif message.text.split(",")[0] in WEEKDAYS.values():
         state_data = await state.get_data()
         provider_id = int(state_data["provider_id"])
         provider_name = state_data["provider_name"]
@@ -111,7 +111,7 @@ async def datetime_selection_or_complete_booking(message: Message, state: FSMCon
     day, available_slots, is_day_off, is_vacation = await get_available_hours(
         tg_id=provider_id, client_tg_id=client_tg_id, service_name=service_name, offset=offset
     )
-    date = weekdays[int(day.weekday())] + ", " + day.strftime(_(DATE_FORMAT))
+    date = WEEKDAYS[int(day.weekday())] + ", " + day.strftime(_(DATE_FORMAT))
     markup = ReplyKeyboardMarkup(keyboard=[[]], resize_keyboard=True, one_time_keyboard=True)
     for time in available_slots:
         time_string = time.strftime("%H:%M")

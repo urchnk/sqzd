@@ -36,7 +36,7 @@ BASE_WEBHOOK_URL = f"https://{HEROKU_APP_NAME}.herokuapp.com"
 
 # Webserver settings
 # bind localhost only to prevent any external access
-WEB_SERVER_HOST = "0.0.0.0"
+WEB_SERVER_HOST = "0.0.0.0"  # TODO: Set up reverse proxy nginx or whatever
 # Port for incoming request from reverse proxy. Should be any available port
 WEB_SERVER_PORT = env.int("PORT")
 
@@ -44,6 +44,8 @@ WEB_SERVER_PORT = env.int("PORT")
 WEBHOOK_PATH = "/webhook"
 # Secret key to validate requests from Telegram (optional)
 WEBHOOK_SECRET = env.str("WEBHOOK_SECRET")
+
+IPGEOLOCATION_API_KEY = env.str("IPGEOLOCATION_API_KEY")
 
 
 def setup_django():
@@ -70,6 +72,7 @@ if settings.DEBUG:
 
 
 def include_all_routers(_dp: Dispatcher):
+    # from tgbot.handlers.admin import admin_router
     from tgbot.handlers.clients_list import clients_list_router
     from tgbot.handlers.help import help_router
     from tgbot.handlers.menu import menu_router
@@ -84,6 +87,7 @@ def include_all_routers(_dp: Dispatcher):
     from tgbot.handlers.start import start_router
 
     _dp.include_routers(
+        # admin_router,
         clients_list_router,
         help_router,
         menu_router,
@@ -129,6 +133,8 @@ def main_webhooks():
         format="%(filename)s:%(lineno)d #%(levelname)-8s [%(asctime)s] - %(name)s - %(message)s",
     )
     logger.info("Starting bot")
+
+    # TODO: Figure out how to set bot commands in webhooks
 
     include_all_routers(dp)
 
