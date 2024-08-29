@@ -50,7 +50,7 @@ async def get_client_reservations_as_message(tg_id: int, is_past: bool = False) 
             username = reservation["tg_username"]
             answer_message_list.append(
                 _(weekday)
-                + " ,"
+                + ", "
                 + start_datetime
                 + "\n\n"
                 + _("Service: {service}\n").format(service=service)
@@ -154,7 +154,6 @@ async def get_provider_breaks_as_message(tg_id: int) -> str:
 
 async def get_provider_vacations_as_message(tg_id: int) -> str:
     vacations = await get_upcoming_provider_vacations(tg_id)
-    print(vacations)
     if vacations:
         vacations_list = ["🏖 <b>" + _("Upcoming vacations:") + "</b>\n"]
 
@@ -188,10 +187,10 @@ async def get_provider_lunch_as_message(tg_id: int) -> str | None:
         return "🍴 <b>" + _("You have not set lunch hours yet.") + "</b>"
 
 
-async def get_provider_days_off_as_message(tg_id: int) -> str | None:
+async def get_provider_weekly_days_off_as_message(tg_id: int) -> str | None:
     provider_data = await get_provider_data(tg_id)
-    if provider_data.get("days_off"):
-        days_off_list = [i for i in provider_data["days_off"]]
+    if provider_data.get("weekend"):
+        days_off_list = [i for i in provider_data["weekend"]]
         return "⛔️ <b>" + _("Days off: ") + "</b>" + ", ".join([WDS[int(day)] for day in days_off_list])
     else:
         return "⛔️ <b>" + _("You have not set your weekly days off yet.") + "</b>"

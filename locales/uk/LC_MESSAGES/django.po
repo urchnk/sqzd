@@ -41,7 +41,7 @@ msgstr "/start - Запустити бота"
 
 #: tgbot/handlers/help.py:15
 msgid "/register_provider = Register as a service provider"
-msgstr "register_provider = Зареєструвати бізнес"
+msgstr "/register_provider = Зареєструвати бізнес"
 
 #: tgbot/handlers/help.py:16
 msgid "/help - Get help"

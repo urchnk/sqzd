@@ -15,14 +15,13 @@ from tgbot.keyboards.default import (
     get_provider_breaks_days_off_menu,
     get_provider_breaks_menu,
     get_provider_recurring_schedule_menu,
-    yes_no,
 )
 from utils.bot.consts import DATE_FORMAT, TIME_FORMAT, TIME_INPUT_FORMAT, WDS, WDS_REV, WEEKDAYS
 from utils.bot.services import (
     get_provider_breaks_as_message,
-    get_provider_days_off_as_message,
     get_provider_lunch_as_message,
     get_provider_vacations_as_message,
+    get_provider_weekly_days_off_as_message,
 )
 from utils.bot.to_async import (
     add_a_day_off,
@@ -32,8 +31,6 @@ from utils.bot.to_async import (
     get_provider_days_off,
     get_tz,
     get_upcoming_provider_breaks,
-    is_day_off,
-    is_vacation,
     remove_a_day_off,
     set_break,
     update_provider,
@@ -63,7 +60,7 @@ async def breaks_and_dayoffs_menu(message: Message, state: FSMContext):
     lunch = await get_provider_lunch_as_message(message.from_user.id)
     reply_message += (lunch or _("You have not set lunch hours yet.")) + "\n\n"
 
-    days_off = await get_provider_days_off_as_message(message.from_user.id)
+    days_off = await get_provider_weekly_days_off_as_message(message.from_user.id)
     reply_message += (days_off or _("You have not set your weekly days off yet.")) + "\n\n"
 
     breaks = await get_provider_breaks_as_message(message.from_user.id)
@@ -88,7 +85,7 @@ async def recurring_schedule_menu(message: Message, state: FSMContext):
     lunch = await get_provider_lunch_as_message(message.from_user.id)
     reply_message = lunch + "\n\n"
 
-    days_off = await get_provider_days_off_as_message(message.from_user.id)
+    days_off = await get_provider_weekly_days_off_as_message(message.from_user.id)
     reply_message += days_off
 
     await message.answer(reply_message, reply_markup=markup)
@@ -153,16 +150,9 @@ async def finish_edit_lunch(message: Message, state: FSMContext):
     await message.answer(reply_message, reply_markup=markup)
 
 
-@provider_breaks_router.message(F.text.in_([_("Edit days off")]), IsProviderFilter())
-async def edit_days_off(message: Message, state: FSMContext):
-    markup = yes_no()
-    markup.keyboard.append([_("Back to recurring schedule settings")])
-    await state.set_state(BreaksStatesGroup.edit_days_off)
-    reply_message = _("Do you want to edit your weekly days off?")
-    await message.answer(reply_message, reply_markup=markup)
-
-
-@provider_breaks_router.message(BreaksStatesGroup.edit_days_off, IsProviderFilter())
+@provider_breaks_router.message(
+    or_f(F.text.in_([_("Edit days off")]), BreaksStatesGroup.edit_days_off), IsProviderFilter()
+)
 async def finish_edit_days_off(message: Message, state: FSMContext):
     days_off = await get_provider_days_off(message.from_user.id)
     reply_message = ""
@@ -185,7 +175,8 @@ async def finish_edit_days_off(message: Message, state: FSMContext):
         )
 
     else:
-        reply_message += _("You've entered something wrong. Please, try again.")
+        if await state.get_state():
+            reply_message += _("You've entered something wrong. Please, try again.") + "\n"
 
     markup = ReplyKeyboardMarkup(keyboard=[[]], resize_keyboard=True)
 
@@ -198,6 +189,7 @@ async def finish_edit_days_off(message: Message, state: FSMContext):
 
     markup.keyboard.append([_("Back to recurring schedule settings")])
     reply_message += _("Switch ✅(working day) / ❌(day off).")
+    await state.set_state(BreaksStatesGroup.edit_days_off)
     await message.answer(reply_message, reply_markup=markup)
 
 
@@ -244,10 +236,9 @@ async def set_a_break_time(message: Message, state: FSMContext):
         day: date = state_data["day"]
         provider = await get_provider(message.from_user.id)
         time_string = message.text.split(" ")[1]
-        start_unaware = datetime.combine(day, datetime.strptime(time_string, TIME_INPUT_FORMAT).time())
         duration = state_data["duration"]
         tz = await get_tz(message.from_user.id)
-        start = start_unaware.replace(tzinfo=tz)
+        start = datetime.combine(day, datetime.strptime(time_string, TIME_INPUT_FORMAT).time(), tzinfo=tz)
         _break = await set_break(provider=provider, start=start, duration=duration)
         await state.clear()
         weekday = _(WEEKDAYS[day.weekday()])
@@ -296,7 +287,7 @@ async def set_a_break_time(message: Message, state: FSMContext):
     else:
         duration = state_data["duration"]
 
-    day, available_slots, is_weekend, is_vacation = await get_available_break_hours(
+    day, available_slots, _is_weekend, _is_vacation = await get_available_break_hours(
         message.from_user.id, duration, offset=offset
     )
     await state.update_data(day=day)
@@ -309,14 +300,14 @@ async def set_a_break_time(message: Message, state: FSMContext):
 
     day_string = _(WEEKDAYS[day.weekday()]) + ", " + day.strftime(DATE_FORMAT)
 
-    if not available_slots:
-        if is_vacation:
-            reply_message = day_string + "\n" + _("You have a vacation.")
-        elif is_weekend:
-            reply_message = day_string + "\n" + _("You have a day-off.")
-        else:
-            reply_message = day_string + "\n" + _("There is no available slot on this day.")
-            markup.keyboard.append([_("See schedule")])
+    if _is_vacation:
+        reply_message = day_string + "\n" + _("You have a vacation.")
+    elif _is_weekend:
+        reply_message = day_string + "\n" + _("You have a day-off.")
+
+    elif not available_slots:
+        reply_message = day_string + "\n" + _("There is no available slot on this day.")
+        markup.keyboard.append([_("See schedule")])
     else:
         for slot in available_slots:
             time_string = slot.strftime(TIME_FORMAT)

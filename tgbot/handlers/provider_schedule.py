@@ -1,4 +1,5 @@
-from datetime import datetime
+import datetime
+import itertools
 
 from aiogram import F, Router
 from aiogram.fsm.context import FSMContext
@@ -12,7 +13,7 @@ from tgbot.keyboards.default import (
     get_provider_main_menu,
     get_provider_services_keyboard,
 )
-from utils.bot.consts import DATE_FORMAT, TIME_FORMAT, WEEKDAYS
+from utils.bot.consts import DATE_FORMAT, TIME_FORMAT, WDS, WEEKDAYS
 from utils.bot.services import get_provider_events_as_message
 from utils.bot.to_async import (
     create_user,
@@ -137,16 +138,18 @@ async def provider_new_reservation_choose_client(message: Message, state: FSMCon
         except AttributeError:
             await message.answer(_("You've entered something wrong. Please, try again."))
             return
-        phone = username = ""
+        phone = username = tg_id = ""
         if identifier[0] == "@":
             username = identifier.lstrip("@")
         elif identifier[0] == "+":
             phone = identifier
+        elif identifier[0] == "#":
+            tg_id = int(identifier.lstrip("#"))
         else:
             return await message.answer(_("You've entered something wrong. Please, try again."))
 
-        if user := await get_user(username=username, phone=phone):
-            await state.update_data(username=user.username, client_id=user.id)
+        if user := await get_user(tg_id=tg_id, username=username, phone=phone):
+            await state.update_data(username=user.username, client_id=user.id, client_tg_id=user.tg_id)
             markup = await get_provider_services_keyboard(message.from_user.id)
             if len(markup.keyboard) > 1:
                 await state.set_state(ProviderReservationsStatesGroup.choose_service)
@@ -235,6 +238,10 @@ async def provider_new_reservation_choose_datetime(message: Message, state: FSMC
         service_name = state_data["service_name"]
         offset = state_data["offset"] - 1
         await state.update_data(offset=offset)
+    elif message.text == _("Today"):
+        service_name = state_data["service_name"]
+        offset = 0
+        await state.update_data(offset=offset)
     elif message.text == _("Cancel"):
         await state.clear()
         await message.answer(
@@ -242,17 +249,18 @@ async def provider_new_reservation_choose_datetime(message: Message, state: FSMC
             reply_markup=get_provider_main_menu(),
         )
         return
-    elif message.text.split(",")[0] in WEEKDAYS.values():
+    elif len(message.text) == 5 and (":" in message.text):
         state_data = await state.get_data()
         provider_id = message.from_user.id
         provider = await get_provider(message.from_user.id)
         client = await get_user(user_id=state_data.get("client_id"))
-        await state.update_data(client_id=client.id)
+        await state.update_data(client_tg_id=client.tg_id)
         service_data = await get_service_data(state_data["service_name"], provider_id)
-        weekday, strdate, strtime = message.text.split(", ")
-        start_unaware = datetime.strptime((strdate + strtime), DATE_FORMAT + TIME_FORMAT)
-        tz = provider.uzer.tz
-        start = start_unaware.replace(tzinfo=tz)
+        hour = int(message.text.split(":")[0])
+        minute = int(message.text.split(":")[1])
+        date: datetime.date = state_data["date"]
+        tz = provider.user.tz
+        start = datetime.datetime.combine(date, datetime.time(hour=hour, minute=minute), tzinfo=tz)
         await set_reservation(
             client=client,
             provider=provider,
@@ -266,9 +274,11 @@ async def provider_new_reservation_choose_datetime(message: Message, state: FSMC
             + _("Client: {name} {username}\n").format(
                 name=client.full_name, username=((", @" + client.tg_username) if client.tg_username else "")
             )
-            + _("Date and time: {weekday}, {strdate}, {strtime}").format(
-                weekday=weekday, strdate=strdate, strtime=strtime
-            ),
+            + _(WDS[date.weekday()])
+            + ", "
+            + start.strftime(DATE_FORMAT)
+            + ", "
+            + start.strftime(TIME_FORMAT),
             reply_markup=get_provider_main_menu(),
         )
         return
@@ -277,8 +287,8 @@ async def provider_new_reservation_choose_datetime(message: Message, state: FSMC
         offset = 0
         await state.update_data(service_name=service_name, offset=offset)
     state_data = await state.get_data()
-    provider_id = message.from_user.id
-    service_data = await get_service_data(service_name, int(provider_id))
+    provider_tg_id = message.from_user.id
+    service_data = await get_service_data(service_name, int(provider_tg_id))
     if not service_data:
         await state.clear()
         await message.answer(_("You've clearly entered something wrong. Please, try again."))
@@ -290,25 +300,39 @@ async def provider_new_reservation_choose_datetime(message: Message, state: FSMC
             last_name=contact["last_name"],
             phone=contact["phone_number"],
         )
-        client_id = client.id
-        await state.update_data(client_id=client.id)
     else:
-        client_id = state_data.get("client_id")
-    client_tg_id = state_data.get("client_tg_id")
+        client = await get_user(
+            tg_id=state_data["client_tg_id"],
+        )
+    client_tg_id = client.tg_id
     day, available_slots, is_day_off, is_vacation = await get_available_hours(
-        tg_id=provider_id, client_id=client_id, client_tg_id=client_tg_id, service_name=service_name, offset=offset
+        current_user_tg_id=provider_tg_id,
+        provider_tg_id=provider_tg_id,
+        client_tg_id=client_tg_id,
+        service_name=service_name,
+        offset=offset,
     )
     date = WEEKDAYS[int(day.weekday())] + ", " + day.strftime(DATE_FORMAT)
     markup = ReplyKeyboardMarkup(keyboard=[[]], resize_keyboard=True, one_time_keyboard=True)
-    for time in available_slots:
-        time_string = time.strftime(TIME_FORMAT)
-        button = KeyboardButton(text=f"{date}, {time_string}")
-        markup.keyboard.append([button])
+    if is_day_off:
+        text = _("You have a day-off.")
+    elif is_vacation:
+        text = _("You have a vacation.")
+    else:
+        time_buttons = []
+        for time in available_slots:
+            time_string = time.strftime("%H:%M")
+            button = KeyboardButton(text=time_string)
+            time_buttons.append(button)
+        time_button_rows = [list(row) for row in itertools.batched(time_buttons, 3)]
+        for row in time_button_rows:
+            markup.keyboard.append(row)
+        text = _("Please, select the desirable date and time of the reservation.") + "\n" + date
+    nav = [KeyboardButton(text=(_("Previous day")))]
     if offset:
-        markup.keyboard.append([KeyboardButton(text=(_("Previous day")))])
-    markup.keyboard.append([KeyboardButton(text=(_("Next day")))])
+        nav.append(KeyboardButton(text=(_("Today"))))
+    nav.append(KeyboardButton(text=(_("Next day"))))
+    markup.keyboard.append(nav)
     markup.keyboard.append([KeyboardButton(text=(_("Cancel")))])
-    await message.answer(
-        _("Please, select the desirable date and time of the reservation."),
-        reply_markup=markup,
-    )
+    await state.update_data(date=day)
+    await message.answer(text, reply_markup=markup)

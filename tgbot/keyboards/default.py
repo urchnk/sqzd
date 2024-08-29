@@ -104,7 +104,7 @@ async def get_provider_clients_keyboard(tg_id: int, offset: int = 0):
             elif client.tg_username:
                 identifier = f"@{client.tg_username}"
             else:
-                identifier = client.username
+                identifier = f"#{client.tg_id}"
 
             markup.keyboard.append([KeyboardButton(text=f"{client.full_name}, {identifier}")])
 

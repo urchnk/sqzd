@@ -6,7 +6,7 @@ from aiogram.types import Message
 
 # Middleware for test bots to restrict the outsiders from interacting
 class AllowedUsersMiddleware(BaseMiddleware):
-    def __init__(self, allowed_user_ids: list[int]):
+    def __init__(self, allowed_user_ids: list[str]):
         self.allowed_user_ids = allowed_user_ids
 
     async def __call__(

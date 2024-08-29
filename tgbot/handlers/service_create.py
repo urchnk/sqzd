@@ -7,10 +7,11 @@ from aiogram.types import Message, ReplyKeyboardMarkup
 
 from apps.services.models import Service
 from bot import _
+from djmoney.money import Money
 from moneyed.l10n import format_money
 from tgbot.filters.provider import IsProviderFilter
 from tgbot.keyboards.default import get_provider_services_menu
-from utils.bot.to_async import add_service, check_service_exists, get_user
+from utils.bot.to_async import add_service, check_service_exists, get_provider_currency, get_user
 
 service_create_router = Router()
 
@@ -61,15 +62,14 @@ async def set_duration(message: Message, state: FSMContext):
 
 @service_create_router.message(NewServiceStatesGroup.set_price, IsProviderFilter())
 async def finish_adding_service(message: Message, state: FSMContext):
-    await state.update_data(price=message.text)
+    await state.update_data(price=Money(message.text, currency=await get_provider_currency(message.from_user.id)))
     service_data = await state.get_data()
     name = service_data["name"]
     duration = int(service_data["duration"])
-    price = Decimal(service_data["price"])
+    price = service_data["price"]
     service: Service = await add_service(name=name, duration=duration, price=price, tg_id=message.from_user.id)
-    price = format_money(service.price, locale=(await get_user(message.from_user.id)).locale)
     await state.clear()
     await message.answer(
-        f"{service.name}\n" + f"{service.duration} " + _("minutes\n") + f"{price}",
+        f"{service.name}\n" + f"{service.duration} " + _("minutes\n") + f"{service.price}",
         reply_markup=get_provider_services_menu(),
     )

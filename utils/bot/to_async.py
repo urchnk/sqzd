@@ -13,6 +13,7 @@ from apps.scheduler.models import Break, Reservation, Vacation
 from apps.scheduler.services import find_available_slots, get_events_by_day
 from apps.services.models import Service
 from asgiref.sync import sync_to_async
+from moneyed import Currency
 
 
 def get_random_username():
@@ -351,25 +352,24 @@ def get_upcoming_provider_vacations(
 
 @sync_to_async
 def get_available_hours(
-    tg_id: int,
+    current_user_tg_id: int,
+    provider_tg_id: int,
     service_name: str,
-    client_id: int = None,
     client_tg_id: int = None,
     offset: int = 0,
-    client_tz: bool = True,
-) -> Any:
-    user = User.objects.filter(tg_id=tg_id).first()
-    service: Service = Service.objects.filter(name=service_name, providers=user.provider).first()
-    if client_id:
-        client = User.objects.filter(pk=client_id).first()
-    elif client_tg_id:
-        client = User.objects.filter(tg_id=client_tg_id).first()
-    else:
-        raise ValueError
-    day = datetime.now(tz=(client.tz if client_tz else user.tz)).date() + timedelta(days=offset)
+) -> tuple[date, list[datetime], bool, bool]:
+    current_user = User.objects.filter(tg_id=current_user_tg_id).first()
+    provider = User.objects.filter(tg_id=provider_tg_id).first().provider
+    service: Service = Service.objects.filter(name=service_name, providers=provider).first()
+    client = User.objects.filter(tg_id=client_tg_id).first() if client_tg_id else None
+    day = datetime.now(tz=current_user.tz).date() + timedelta(days=offset)
 
     available_slots, _is_day_off, _is_vacation = find_available_slots(
-        provider=user.provider, client=client, event_duration=service.duration, day=day
+        current_user=current_user,
+        provider=provider,
+        client=client,
+        event_duration=service.duration,
+        day=day,
     )
     return day, available_slots, _is_day_off, _is_vacation
 
@@ -378,19 +378,24 @@ def get_available_hours(
 def get_available_break_hours(tg_id: int, duration: int, offset: int = 0):
     user = User.objects.filter(tg_id=tg_id).first()
     day = datetime.now(tz=user.tz).date() + timedelta(days=offset)
-    available_slots, is_weekend, is_vacation = find_available_slots(
-        provider=user.provider, event_duration=duration, day=day
+    available_slots, _is_weekend, _is_vacation = find_available_slots(
+        current_user=user, provider=user.provider, event_duration=duration, day=day
     )
-    return day, available_slots, is_weekend, is_vacation
+    return day, available_slots, _is_weekend, _is_vacation
 
 
 @sync_to_async
 def get_provider_events_by_offset(tg_id: int, offset: int = 0) -> Any:
     user = User.objects.filter(tg_id=tg_id).first()
     day = datetime.now(tz=user.tz).date() + timedelta(days=offset)
-    events = get_events_by_day(provider=user.provider, day=day)
+    events = get_events_by_day(current_user=user, provider=user.provider, day=day)
 
     return day, events
+
+
+@sync_to_async
+def get_provider_currency(tg_id: int) -> Currency:
+    return Provider.objects.filter(user__tg_id=tg_id).first().currency
 
 
 @sync_to_async

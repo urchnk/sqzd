@@ -96,7 +96,7 @@ async def set_timezone(message: Message, state: FSMContext):
         longitude = message.location.longitude
         try:
             session = requests.Session()
-            retry = Retry(connect=5, backoff_factor=1)
+            retry = Retry(connect=5, backoff_factor=0.5)
             adapter = HTTPAdapter(max_retries=retry)
             session.mount("https://", adapter)
 
