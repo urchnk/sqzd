@@ -120,7 +120,9 @@ async def get_provider_services_keyboard(tg_id: int):
     services = await get_provider_services(tg_id)
     if services:
         for service in services:
-            markup.keyboard.append([service.name])
+            markup.keyboard.append(
+                [service.name + ", " + str(service.price.amount) + " " + str(service.price.currency)]
+            )
     markup.keyboard.append([KeyboardButton(text=_("Back to main menu"))])
     return markup
 

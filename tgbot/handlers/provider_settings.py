@@ -32,4 +32,4 @@ async def my_deep_link(message: Message, state: FSMContext):
     deep_link = await create_start_link(payload=encode_payload(str(message.from_user.id)), bot=bot)
     markup = ReplyKeyboardMarkup(keyboard=[[]], resize_keyboard=True)
     markup.keyboard.append([KeyboardButton(text=_("Back to provider settings"))])
-    await message.answer("Your deep link:\n" + deep_link, reply_markup=get_provider_settings_menu())
+    await message.answer(_("Your deep link:") + "\n" + deep_link, reply_markup=get_provider_settings_menu())

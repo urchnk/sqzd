@@ -15,6 +15,8 @@ def normalize_time(value: datetime | time | None) -> datetime | time | None:
     if value and value.minute not in ok:
         while value.minute not in ok:
             value += timedelta(minutes=1)
+    if type(value) == datetime:
+        value = value.replace(second=0, microsecond=0)
     return value
 
 

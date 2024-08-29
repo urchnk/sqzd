@@ -157,22 +157,12 @@ async def finish_edit_days_off(message: Message, state: FSMContext):
     days_off = await get_provider_days_off(message.from_user.id)
     reply_message = ""
     if message.text.split(" ")[0] == "❌":
-        days_off.replace(str(WDS_REV[message.text.split(" ")[1]]), "")
-        await update_provider(message.from_user.id, days_off="".join(sorted(days_off)))
+        days_off = days_off.replace(str(WDS_REV[message.text.split(" ")[1]]), "")
+        await update_provider(message.from_user.id, weekend="".join(sorted(days_off)))
 
     elif message.text.split(" ")[0] == "✅":
         days_off += str(WDS_REV[message.text.split(" ")[1]])
-        await update_provider(message.from_user.id, days_off="".join(sorted(days_off)))
-
-    elif message.text == _("Yes"):
-        pass
-
-    elif message.text == _("No"):
-        await state.clear()
-        await message.answer(
-            _("Recurring schedule menu"),
-            reply_markup=await get_provider_recurring_schedule_menu(),
-        )
+        await update_provider(message.from_user.id, weekend="".join(sorted(days_off)))
 
     else:
         if await state.get_state():
