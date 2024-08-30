@@ -388,7 +388,7 @@ def get_available_break_hours(tg_id: int, duration: int, offset: int = 0):
 def get_provider_events_by_offset(tg_id: int, offset: int = 0) -> Any:
     user = User.objects.filter(tg_id=tg_id).first()
     day = datetime.now(tz=user.tz).date() + timedelta(days=offset)
-    events = get_events_by_day(current_user=user, provider=user.provider, day=day)
+    events = get_events_by_day(day=day, provider=user.provider)
 
     return day, events
 

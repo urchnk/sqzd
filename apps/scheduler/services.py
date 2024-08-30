@@ -13,11 +13,15 @@ PTZ = ZoneInfo("Europe/Vienna")
 
 def get_events_by_day(
     day: date,
-    day_start: datetime,
-    day_end: datetime,
+    day_start: datetime = None,
+    day_end: datetime = None,
     provider: Provider = None,
     client: User = None,
 ) -> list:
+    if not (day_start and day_end):
+        day_start = datetime.combine(date=day, time=time())
+        day_end = datetime.combine(date=day + timedelta(days=1), time=time())
+
     qs = Reservation.objects.select_related("provider", "client", "service").filter(
         Q(start__lte=day_end) & Q(end__gte=day_start),
         is_canceled=False,
