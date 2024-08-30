@@ -51,6 +51,11 @@ async def datetime_selection_or_complete_booking(message: Message, state: FSMCon
         offset = state_data["offset"] + 1
         await state.update_data(offset=offset)
 
+    elif message.text == _("Today"):
+        service_name = state_data["service_name"]
+        offset = 0
+        await state.update_data(offset=offset)
+
     elif message.text == _("Previous day"):
         service_name = state_data["service_name"]
         offset = state_data["offset"] - 1

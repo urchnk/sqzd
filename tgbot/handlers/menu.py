@@ -38,6 +38,7 @@ async def show_provider_menu(message: Message, state: FSMContext):
             _("Back to client menu"),
             _("My client menu"),
             _("Cancel"),
+            _("Cancel booking"),
         ]
     ),
 )

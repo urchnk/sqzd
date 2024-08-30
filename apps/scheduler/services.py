@@ -1,11 +1,14 @@
 from datetime import date, datetime, time, timedelta
 from typing import Any
+from zoneinfo import ZoneInfo
 
 from django.db.models import F, Q
 
 from apps.roles.models import Provider, User
 from apps.scheduler.models import Break, Reservation, Vacation
 from utils.db import normalize_time
+
+PTZ = ZoneInfo("Europe/Vienna")
 
 
 def get_events_by_day(
@@ -38,17 +41,20 @@ def get_events_by_day(
     breaks = [item for item in Break.objects.filter(provider=provider, start__date=day, end__date=day).values()]
 
     reserved_unsorted = reservations + breaks
+
     if provider.lunch_start and provider.lunch_end:
-        lunch = {
-            "start": datetime.combine(date=day, time=provider.lunch_start, tzinfo=provider.user.tz).astimezone(
-                tz=day_start.tzinfo
-            ),
-            "end": datetime.combine(date=day, time=provider.lunch_end, tzinfo=provider.user.tz).astimezone(
-                tz=day_start.tzinfo
-            ),
-            "is_lunch": True,
-        }
-        reserved_unsorted.append(lunch)
+        for _day in {(day - timedelta(days=1)), day, (day + timedelta(days=1))}:
+            lunch = {
+                "start": datetime.combine(date=_day, time=provider.lunch_start, tzinfo=provider.user.tz).astimezone(
+                    tz=day_start.tzinfo
+                ),
+                "end": datetime.combine(date=_day, time=provider.lunch_end, tzinfo=provider.user.tz).astimezone(
+                    tz=day_start.tzinfo
+                ),
+                "is_lunch": True,
+            }
+            if lunch["end"] > day_start or lunch["start"] < day_end:
+                reserved_unsorted.append(lunch)
 
     return sorted(reserved_unsorted, key=lambda d: d["start"])
 
@@ -67,15 +73,17 @@ def find_available_slots(
 ) -> tuple[list[datetime], bool, bool]:
     tz = current_user.tz
     now = datetime.now(tz=tz)
+    duration = timedelta(minutes=event_duration)
+    slot_duration = timedelta(minutes=provider.slot)
 
-    day_start = datetime.combine(day, time(hour=0, minute=0), tzinfo=tz) if day != now.date() else normalize_time(now)
-    day_end = datetime.combine(day, time(hour=0, minute=0), tzinfo=tz)
+    day_start = max(datetime.combine(day, time(hour=0, minute=0), tzinfo=tz), normalize_time(now))
+    day_end = datetime.combine(day, time(hour=0, minute=0), tzinfo=tz) + duration
+
     if day_end.astimezone(tz=provider.user.tz).date() <= day_start.astimezone(tz=provider.user.tz).date():
         day_end = day_end + timedelta(days=1)
 
     events = get_events_by_day(day=day, day_start=day_start, day_end=day_end, provider=provider, client=client)
-    duration = timedelta(minutes=event_duration)
-    slot_duration = timedelta(minutes=provider.slot)
+
     weekend = get_weekend(provider)
 
     available_slots = []
@@ -91,10 +99,12 @@ def find_available_slots(
 
             if not (
                 cursor.astimezone(tz=provider.user.tz).weekday() in weekend
+                or cursor < now
                 or is_vacation(provider.user.tg_id, cursor.astimezone(tz=provider.user.tz).date())
                 or not (provider.start <= provider_start <= provider_end <= provider.end)
             ):
                 available_slots.append(cursor.astimezone(tz=tz))
+
             cursor += slot_duration
         cursor = event_end
 
@@ -104,10 +114,13 @@ def find_available_slots(
 
         if not (
             cursor.astimezone(tz=provider.user.tz).weekday() in weekend
+            or cursor < now
             or is_vacation(provider.user.tg_id, cursor.astimezone(tz=provider.user.tz).date())
             or not (provider.start <= provider_start <= provider_end <= provider.end)
+            or not cursor.date() == day  # prevent 00:00 at the end of the time choices keyboard
         ):
             available_slots.append(cursor.astimezone(tz=tz))
+
         cursor += slot_duration
 
     _is_day_off = day.weekday() in get_weekend(provider)
