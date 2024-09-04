@@ -172,7 +172,7 @@ async def set_end(message: Message, state: FSMContext):
         tz=tz,
         currency=currency,
     )
-    booking_link = await create_start_link(bot, str(message.from_user.id), encode=True)
+    booking_link = await create_start_link(bot, message.from_user.username) if message.from_user.username else None
     await state.clear()
     start = start.strftime(TIME_FORMAT)
     end = end.strftime(TIME_FORMAT)
@@ -187,6 +187,10 @@ async def set_end(message: Message, state: FSMContext):
         + _(moneyed.get_currency(currency).name)
         + "\n"
         + _("Working day from {start} to {end}\n").format(start=start, end=end)
-        + _("Your link for booking: {booking_link}").format(booking_link=booking_link),
+        + (
+            _("Your link for booking: {booking_link}").format(booking_link=booking_link)
+            if booking_link
+            else _("Please, set up a Telegram username before using deep link.")
+        ),
         reply_markup=get_provider_main_menu(),
     )
