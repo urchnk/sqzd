@@ -19,8 +19,8 @@ def get_events_by_day(
     client: User = None,
 ) -> list:
     if not (day_start and day_end):
-        day_start = datetime.combine(date=day, time=time())
-        day_end = datetime.combine(date=day + timedelta(days=1), time=time())
+        day_start = datetime.combine(date=day, time=time(), tzinfo=provider.user.tz)
+        day_end = datetime.combine(date=day + timedelta(days=1), time=time(), tzinfo=provider.user.tz)
 
     qs = Reservation.objects.select_related("provider", "client", "service").filter(
         Q(start__lte=day_end) & Q(end__gte=day_start),
@@ -57,7 +57,7 @@ def get_events_by_day(
                 ),
                 "is_lunch": True,
             }
-            if lunch["end"] > day_start or lunch["start"] < day_end:
+            if lunch["end"] > day_start and lunch["start"] < day_end:
                 reserved_unsorted.append(lunch)
 
     return sorted(reserved_unsorted, key=lambda d: d["start"])

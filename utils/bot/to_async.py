@@ -320,7 +320,7 @@ def is_vacation(tg_id: int, day: date) -> bool:
 
 
 @sync_to_async
-def is_day_off(tg_id: int, day: date) -> bool:
+def is_weekend(tg_id: int, day: date) -> bool:
     provider: Provider = User.objects.filter(tg_id=tg_id).first().provider
     return str(day.weekday()) in provider.weekend
 

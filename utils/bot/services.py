@@ -13,6 +13,8 @@ from utils.bot.to_async import (
     get_upcoming_provider_vacations,
     get_user,
     is_provider,
+    is_vacation,
+    is_weekend,
     last_client_reservation,
     next_client_reservation,
 )
@@ -117,16 +119,23 @@ async def get_provider_events_as_message(tg_id: int, offset: int) -> str:
 
     for event in events:
         time = f'⌚️ {event["start"].astimezone(tz).strftime(TIME_FORMAT)} - {event["end"].astimezone(tz).strftime(TIME_FORMAT)}\n'
-        if "client_name" in event:
-            service = event["service_name"] + "\n"
-            name = "👤 " + event["client_name"] + "\n"
-            username = (", @" + event["client_username"] + "\n") if event.get("client_username") else ""
-            phone = ("☎️ " + event["client_phone"] + "\n") if event.get("client_phone") else ""
-            events_list.append(time + "📝 " + service + name + username + phone)
-        elif event.get("is_lunch", False):
-            events_list.append(time + "🍴 " + _("Lunch") + "\n")
+        _is_weekend = await is_weekend(tg_id, day)
+        _is_vacation = await is_vacation(tg_id, day)
+        if _is_weekend:
+            events_list.append(_("You have a day-off."))
+        elif _is_vacation:
+            events_list.append(_("You have a vacation."))
         else:
-            events_list.append(time + "⏳ " + _("Break") + "\n")  # TODO: add break description field
+            if "client_name" in event:
+                service = event["service_name"] + "\n"
+                name = "👤 " + event["client_name"] + "\n"
+                username = (", @" + event["client_username"] + "\n") if event.get("client_username") else ""
+                phone = ("☎️ " + event["client_phone"] + "\n") if event.get("client_phone") else ""
+                events_list.append(time + "📝 " + service + name + username + phone)
+            elif event.get("is_lunch", False):
+                events_list.append(time + "🍴 " + _("Lunch") + "\n")
+            else:
+                events_list.append(time + "⏳ " + _("Break") + "\n")  # TODO: add break description field
     return "\n\n".join(events_list)
 
 
