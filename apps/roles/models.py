@@ -50,7 +50,7 @@ class Provider(models.Model, TimeStampedModelMixin):
     weekend = models.CharField(verbose_name="Weekly days off", max_length=7, default="56", blank=True)
     slot = NormalizedDurationField(default=DEFAULT_SLOT)
     currency = CurrencyField(default="UAH")
-    paid_until = models.DateField()
+    paid_until = models.DateField(null=True)
 
     def __str__(self):
         return f"{self.user}"
