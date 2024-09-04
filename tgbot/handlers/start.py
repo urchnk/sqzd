@@ -2,7 +2,6 @@ from aiogram import Router
 from aiogram.filters import CommandObject, CommandStart
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
-from aiogram.utils.deep_linking import decode_payload
 
 from bot import _
 from tgbot.handlers.reservation_create import NewReservationStatesGroup
@@ -13,7 +12,7 @@ from utils.bot.to_async import get_or_create_user, get_provider
 start_router = Router()
 
 
-@start_router.message(CommandStart(deep_link=True, deep_link_encoded=True))
+@start_router.message(CommandStart(deep_link=True))
 async def user_start_deeplink(message: Message, command: CommandObject(), state: FSMContext):
     await state.clear()
     last_name = message.from_user.last_name or None
@@ -26,11 +25,11 @@ async def user_start_deeplink(message: Message, command: CommandObject(), state:
         locale=locale,
     )
     await message.answer(_("Hello, ") + user.first_name)
-    provider = await get_provider(tg_id=int(command.args))
+    provider = await get_provider(username=command.args)
     provider_full_name = provider.user.get_full_name()
     provider_username = provider.user.username
     await state.set_state(NewReservationStatesGroup.service_selection)
-    await state.update_data(provider_id=int(command.args), provider_name=provider_full_name)
+    await state.update_data(provider_id=provider.user.tg_id, provider_name=provider_full_name)
     await message.answer(
         _("Do you want to book an reservation with provider {full_name} @{username}?").format(
             full_name=provider_full_name, username=provider_username

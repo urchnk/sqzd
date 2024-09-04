@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-08-29 22:12+0200\n"
+"POT-Creation-Date: 2024-09-04 21:35+0200\n"
 "PO-Revision-Date: 2024-08-09 11:39+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -26,7 +26,7 @@ msgstr ""
 msgid "Ukrainian"
 msgstr ""
 
-#: tgbot/handlers/clients_list.py:12 tgbot/keyboards/default.py:29
+#: tgbot/handlers/clients_list.py:12 tgbot/keyboards/default.py:28
 msgid "Clients"
 msgstr ""
 
@@ -47,9 +47,9 @@ msgid "/help - Get help"
 msgstr ""
 
 #: tgbot/handlers/menu.py:17 tgbot/handlers/menu.py:37
-#: tgbot/keyboards/default.py:49 tgbot/keyboards/default.py:85
-#: tgbot/keyboards/default.py:114 tgbot/keyboards/default.py:124
-#: tgbot/keyboards/default.py:138
+#: tgbot/keyboards/default.py:41 tgbot/keyboards/default.py:77
+#: tgbot/keyboards/default.py:106 tgbot/keyboards/default.py:118
+#: tgbot/keyboards/default.py:133
 msgid "Back to main menu"
 msgstr ""
 
@@ -63,12 +63,12 @@ msgstr ""
 msgid "Back to provider menu"
 msgstr ""
 
-#: tgbot/handlers/menu.py:19 tgbot/keyboards/default.py:66
+#: tgbot/handlers/menu.py:19 tgbot/keyboards/default.py:58
 msgid "My provider menu"
 msgstr ""
 
 #: tgbot/handlers/menu.py:20 tgbot/handlers/menu.py:40
-#: tgbot/handlers/provider_breaks.py:220 tgbot/handlers/provider_breaks.py:308
+#: tgbot/handlers/provider_breaks.py:214 tgbot/handlers/provider_breaks.py:302
 #: tgbot/handlers/provider_create.py:83 tgbot/handlers/provider_schedule.py:245
 #: tgbot/handlers/provider_schedule.py:336 tgbot/handlers/service_create.py:28
 #: tgbot/handlers/service_create.py:36 tgbot/handlers/service_create.py:37
@@ -77,7 +77,7 @@ msgid "Cancel"
 msgstr ""
 
 #: tgbot/handlers/menu.py:28 tgbot/handlers/menu.py:31
-#: tgbot/handlers/menu.py:47 tgbot/handlers/provider_schedule.py:89
+#: tgbot/handlers/menu.py:48 tgbot/handlers/provider_schedule.py:89
 #: tgbot/handlers/service_create.py:38
 msgid "Main menu:"
 msgstr ""
@@ -86,88 +86,87 @@ msgstr ""
 msgid "Back to client menu"
 msgstr ""
 
-#: tgbot/handlers/menu.py:39 tgbot/keyboards/default.py:32
+#: tgbot/handlers/menu.py:39 tgbot/keyboards/default.py:31
 msgid "My client menu"
 msgstr ""
 
-#: tgbot/handlers/menu.py:47
+#: tgbot/handlers/menu.py:41 tgbot/handlers/reservation_create.py:64
+#: tgbot/handlers/reservation_create.py:165
+msgid "Cancel booking"
+msgstr ""
+
+#: tgbot/handlers/menu.py:48
 msgid "Client menu:"
 msgstr ""
 
-#: tgbot/handlers/menu.py:51 tgbot/keyboards/default.py:59
+#: tgbot/handlers/menu.py:52 tgbot/keyboards/default.py:51
 msgid "Upcoming reservations"
 msgstr ""
 
-#: tgbot/handlers/menu.py:51 tgbot/handlers/menu.py:53
-#: tgbot/keyboards/default.py:60
+#: tgbot/handlers/menu.py:52 tgbot/handlers/menu.py:54
+#: tgbot/keyboards/default.py:52
 msgid "Past reservations"
 msgstr ""
 
-#: tgbot/handlers/provider_breaks.py:52 tgbot/keyboards/default.py:28
+#: tgbot/handlers/provider_breaks.py:51 tgbot/keyboards/default.py:27
 msgid "Breaks & days off"
 msgstr ""
 
-#: tgbot/handlers/provider_breaks.py:52 tgbot/handlers/provider_breaks.py:386
-#: tgbot/keyboards/default.py:151 tgbot/keyboards/default.py:186
+#: tgbot/handlers/provider_breaks.py:51 tgbot/handlers/provider_breaks.py:81
+#: tgbot/handlers/provider_breaks.py:95 tgbot/handlers/provider_breaks.py:107
+#: tgbot/handlers/provider_breaks.py:118 tgbot/handlers/provider_breaks.py:133
+#: tgbot/handlers/provider_breaks.py:141 tgbot/handlers/provider_breaks.py:174
+#: tgbot/handlers/provider_breaks.py:380 tgbot/keyboards/default.py:168
 msgid "Back to breaks & days off"
 msgstr ""
 
-#: tgbot/handlers/provider_breaks.py:61 utils/bot/services.py:187
+#: tgbot/handlers/provider_breaks.py:60 utils/bot/services.py:196
 msgid "You have not set lunch hours yet."
 msgstr ""
 
-#: tgbot/handlers/provider_breaks.py:64 utils/bot/services.py:196
+#: tgbot/handlers/provider_breaks.py:63 utils/bot/services.py:205
 msgid "You have not set your weekly days off yet."
 msgstr ""
 
-#: tgbot/handlers/provider_breaks.py:78 tgbot/keyboards/default.py:132
-msgid "Recurring schedule settings"
-msgstr ""
-
-#: tgbot/handlers/provider_breaks.py:78 tgbot/handlers/provider_breaks.py:97
-#: tgbot/handlers/provider_breaks.py:113 tgbot/handlers/provider_breaks.py:124
-#: tgbot/handlers/provider_breaks.py:139 tgbot/handlers/provider_breaks.py:147
-#: tgbot/handlers/provider_breaks.py:180
-msgid "Back to recurring schedule settings"
-msgstr ""
-
-#: tgbot/handlers/provider_breaks.py:94 tgbot/keyboards/default.py:148
+#: tgbot/handlers/provider_breaks.py:76 tgbot/keyboards/default.py:126
 msgid "Edit lunch time"
 msgstr ""
 
-#: tgbot/handlers/provider_breaks.py:100
-msgid "Enter the desirable lunch start time"
+#: tgbot/handlers/provider_breaks.py:80 tgbot/handlers/provider_breaks.py:86
+msgid "Clear recurring lunch time"
 msgstr ""
 
-#: tgbot/handlers/provider_breaks.py:102
-msgid ""
-"Please, consider keeping minutes divisible by 15, i.e.: 11:30, 12:45, "
-"13:00"
+#: tgbot/handlers/provider_breaks.py:90
+msgid "You have cleared your daily lunch hours."
 msgstr ""
 
-#: tgbot/handlers/provider_breaks.py:115
-msgid "Please, enter time in HH:MM format with MM being among 00, 15, 30, 45."
+#: tgbot/handlers/provider_breaks.py:97
+msgid "Enter the desirable lunch start time in HH:MM format"
 msgstr ""
 
-#: tgbot/handlers/provider_breaks.py:126
+#: tgbot/handlers/provider_breaks.py:109
+msgid "Please, enter time in HH:MM format with MM being among 00 and 30"
+msgstr ""
+
+#: tgbot/handlers/provider_breaks.py:120
 msgid "Please, enter the desirable lunch end in the same HH:MM format."
 msgstr ""
 
-#: tgbot/handlers/provider_breaks.py:141
+#: tgbot/handlers/provider_breaks.py:135
 msgid ""
 "Please, enter end time (bigger than the start time) in HH:MM format with "
-"MM among 00, 15, 30, 45."
+"MM among 00 and 30."
 msgstr ""
 
-#: tgbot/handlers/provider_breaks.py:148
+#: tgbot/handlers/provider_breaks.py:142
 msgid "You've set your recurring lunch time to "
 msgstr ""
 
-#: tgbot/handlers/provider_breaks.py:154 tgbot/keyboards/default.py:149
-msgid "Edit days off"
+#: tgbot/handlers/provider_breaks.py:148 tgbot/keyboards/default.py:127
+msgid "Edit weekly days off"
 msgstr ""
 
-#: tgbot/handlers/provider_breaks.py:169 tgbot/handlers/provider_breaks.py:272
+#: tgbot/handlers/provider_breaks.py:163 tgbot/handlers/provider_breaks.py:266
 #: tgbot/handlers/provider_create.py:67 tgbot/handlers/provider_create.py:78
 #: tgbot/handlers/provider_create.py:140 tgbot/handlers/provider_create.py:155
 #: tgbot/handlers/provider_schedule.py:139
@@ -176,156 +175,157 @@ msgstr ""
 msgid "You've entered something wrong. Please, try again."
 msgstr ""
 
-#: tgbot/handlers/provider_breaks.py:181
+#: tgbot/handlers/provider_breaks.py:175
 msgid "Switch ✅(working day) / ❌(day off)."
 msgstr ""
 
-#: tgbot/handlers/provider_breaks.py:186 tgbot/keyboards/default.py:135
+#: tgbot/handlers/provider_breaks.py:180 tgbot/keyboards/default.py:130
 msgid "Breaks"
 msgstr ""
 
-#: tgbot/handlers/provider_breaks.py:186 tgbot/handlers/provider_breaks.py:196
-#: tgbot/handlers/provider_breaks.py:249 tgbot/handlers/provider_breaks.py:349
+#: tgbot/handlers/provider_breaks.py:180 tgbot/handlers/provider_breaks.py:190
+#: tgbot/handlers/provider_breaks.py:243 tgbot/handlers/provider_breaks.py:343
 msgid "Back to breaks"
 msgstr ""
 
-#: tgbot/handlers/provider_breaks.py:189 tgbot/handlers/provider_breaks.py:222
+#: tgbot/handlers/provider_breaks.py:183 tgbot/handlers/provider_breaks.py:216
 msgid "Breaks menu:"
 msgstr ""
 
-#: tgbot/handlers/provider_breaks.py:192 tgbot/keyboards/default.py:183
+#: tgbot/handlers/provider_breaks.py:186 tgbot/keyboards/default.py:165
 msgid "Set a break"
 msgstr ""
 
-#: tgbot/handlers/provider_breaks.py:198 tgbot/handlers/provider_breaks.py:251
+#: tgbot/handlers/provider_breaks.py:192 tgbot/handlers/provider_breaks.py:245
 msgid ""
 "Choose an option or enter the duration of a break in minutes (should be "
-"divisible by 15)."
+"divisible by 30)."
 msgstr ""
 
-#: tgbot/handlers/provider_breaks.py:208 tgbot/handlers/provider_breaks.py:288
+#: tgbot/handlers/provider_breaks.py:202 tgbot/handlers/provider_breaks.py:282
 #: tgbot/handlers/provider_schedule.py:51
 #: tgbot/handlers/provider_schedule.py:84
 #: tgbot/handlers/provider_schedule.py:100
 #: tgbot/handlers/provider_schedule.py:233
 #: tgbot/handlers/provider_schedule.py:334
 #: tgbot/handlers/reservation_create.py:49
-#: tgbot/handlers/reservation_create.py:139
-#: tgbot/handlers/reservation_create.py:142
+#: tgbot/handlers/reservation_create.py:148
+#: tgbot/handlers/reservation_create.py:151
 msgid "Next day"
 msgstr ""
 
-#: tgbot/handlers/provider_breaks.py:212 tgbot/handlers/provider_breaks.py:287
+#: tgbot/handlers/provider_breaks.py:206 tgbot/handlers/provider_breaks.py:281
 #: tgbot/handlers/provider_schedule.py:81
 #: tgbot/handlers/provider_schedule.py:99
 #: tgbot/handlers/provider_schedule.py:241
 #: tgbot/handlers/provider_schedule.py:333
-#: tgbot/handlers/reservation_create.py:139
+#: tgbot/handlers/reservation_create.py:54
+#: tgbot/handlers/reservation_create.py:148
 msgid "Today"
 msgstr ""
 
-#: tgbot/handlers/provider_breaks.py:216 tgbot/handlers/provider_breaks.py:285
+#: tgbot/handlers/provider_breaks.py:210 tgbot/handlers/provider_breaks.py:279
 #: tgbot/handlers/provider_schedule.py:51
 #: tgbot/handlers/provider_schedule.py:78
 #: tgbot/handlers/provider_schedule.py:97
 #: tgbot/handlers/provider_schedule.py:237
 #: tgbot/handlers/provider_schedule.py:331
-#: tgbot/handlers/reservation_create.py:54
-#: tgbot/handlers/reservation_create.py:139
+#: tgbot/handlers/reservation_create.py:59
+#: tgbot/handlers/reservation_create.py:148
 msgid "Previous day"
 msgstr ""
 
-#: tgbot/handlers/provider_breaks.py:236
+#: tgbot/handlers/provider_breaks.py:230
 msgid "You have set a break:"
 msgstr ""
 
-#: tgbot/handlers/provider_breaks.py:253
+#: tgbot/handlers/provider_breaks.py:247
 msgid ""
 "Max break duration is 4h (360 min). If you need more - consider using a "
 "few breaks in a row."
 msgstr ""
 
-#: tgbot/handlers/provider_breaks.py:294
-#: tgbot/handlers/provider_schedule.py:320
+#: tgbot/handlers/provider_breaks.py:288
+#: tgbot/handlers/provider_schedule.py:320 utils/bot/services.py:127
 msgid "You have a vacation."
 msgstr ""
 
-#: tgbot/handlers/provider_breaks.py:296
-#: tgbot/handlers/provider_schedule.py:318
+#: tgbot/handlers/provider_breaks.py:290
+#: tgbot/handlers/provider_schedule.py:318 utils/bot/services.py:125
 msgid "You have a day-off."
 msgstr ""
 
-#: tgbot/handlers/provider_breaks.py:299
+#: tgbot/handlers/provider_breaks.py:293
 msgid "There is no available slot on this day."
 msgstr ""
 
-#: tgbot/handlers/provider_breaks.py:300 tgbot/handlers/provider_schedule.py:42
+#: tgbot/handlers/provider_breaks.py:294 tgbot/handlers/provider_schedule.py:42
 msgid "See schedule"
 msgstr ""
 
-#: tgbot/handlers/provider_breaks.py:306
+#: tgbot/handlers/provider_breaks.py:300
 msgid "Please, select the desirable date and time of the break."
 msgstr ""
 
-#: tgbot/handlers/provider_breaks.py:313 tgbot/keyboards/default.py:184
+#: tgbot/handlers/provider_breaks.py:307 tgbot/keyboards/default.py:166
 msgid "Cancel a break"
 msgstr ""
 
-#: tgbot/handlers/provider_breaks.py:324 utils/bot/services.py:129
+#: tgbot/handlers/provider_breaks.py:318 utils/bot/services.py:138
 msgid "Break"
 msgstr ""
 
-#: tgbot/handlers/provider_breaks.py:324
+#: tgbot/handlers/provider_breaks.py:318
 msgid "was canceled."
 msgstr ""
 
-#: tgbot/handlers/provider_breaks.py:343
+#: tgbot/handlers/provider_breaks.py:337
 msgid "You don't have any breaks planned"
 msgstr ""
 
-#: tgbot/handlers/provider_breaks.py:345
+#: tgbot/handlers/provider_breaks.py:339
 msgid "Do you want to cancel another break?"
 msgstr ""
 
-#: tgbot/handlers/provider_breaks.py:347
+#: tgbot/handlers/provider_breaks.py:341
 msgid "Do you want to cancel a break?"
 msgstr ""
 
-#: tgbot/handlers/provider_breaks.py:354 tgbot/keyboards/default.py:136
+#: tgbot/handlers/provider_breaks.py:348 tgbot/keyboards/default.py:131
 msgid "Days off"
 msgstr ""
 
-#: tgbot/handlers/provider_breaks.py:354
+#: tgbot/handlers/provider_breaks.py:348
 msgid "Back to days off"
 msgstr ""
 
-#: tgbot/handlers/provider_breaks.py:366
+#: tgbot/handlers/provider_breaks.py:360
 msgid "You have reservations on this date. Cancel them before planning a vacation"
 msgstr ""
 
-#: tgbot/handlers/provider_breaks.py:370
+#: tgbot/handlers/provider_breaks.py:364
 msgid "You have added the day off for "
 msgstr ""
 
-#: tgbot/handlers/provider_breaks.py:374
+#: tgbot/handlers/provider_breaks.py:368
 msgid "You have removed the day off for "
 msgstr ""
 
-#: tgbot/handlers/provider_breaks.py:376
+#: tgbot/handlers/provider_breaks.py:370
 msgid ""
 " is already a weekend. No need to set a day off.\n"
 "\n"
 msgstr ""
 
-#: tgbot/handlers/provider_breaks.py:388
+#: tgbot/handlers/provider_breaks.py:382
 msgid "Switch available weekdays (📅) to days off (🏖)."
 msgstr ""
 
-#: tgbot/handlers/provider_breaks.py:390
+#: tgbot/handlers/provider_breaks.py:384
 msgid "You cannot set a day off for a day with scheduled reservations (📝)."
 msgstr ""
 
-#: tgbot/handlers/provider_breaks.py:392
+#: tgbot/handlers/provider_breaks.py:386
 msgid "There is no need to set a day off on your recurring weekend (🏠)."
 msgstr ""
 
@@ -339,7 +339,7 @@ msgstr ""
 
 #: tgbot/handlers/provider_create.py:54 tgbot/handlers/reservation_create.py:24
 #: tgbot/handlers/service_remove.py:90 tgbot/handlers/service_remove.py:117
-#: tgbot/keyboards/default.py:14
+#: tgbot/keyboards/default.py:13
 msgid "Yes"
 msgstr ""
 
@@ -349,7 +349,7 @@ msgstr ""
 
 #: tgbot/handlers/provider_create.py:57 tgbot/handlers/reservation_create.py:36
 #: tgbot/handlers/service_remove.py:101 tgbot/handlers/service_remove.py:122
-#: tgbot/keyboards/default.py:14
+#: tgbot/keyboards/default.py:13
 msgid "No"
 msgstr ""
 
@@ -412,7 +412,7 @@ msgstr ""
 msgid "Your link for booking: {booking_link}"
 msgstr ""
 
-#: tgbot/handlers/provider_schedule.py:42 tgbot/keyboards/default.py:24
+#: tgbot/handlers/provider_schedule.py:42 tgbot/keyboards/default.py:23
 msgid "Reservations"
 msgstr ""
 
@@ -436,11 +436,11 @@ msgstr ""
 msgid "New reservation:"
 msgstr ""
 
-#: tgbot/handlers/provider_schedule.py:120 tgbot/keyboards/default.py:112
+#: tgbot/handlers/provider_schedule.py:120 tgbot/keyboards/default.py:104
 msgid "Next 10"
 msgstr ""
 
-#: tgbot/handlers/provider_schedule.py:123 tgbot/keyboards/default.py:99
+#: tgbot/handlers/provider_schedule.py:123 tgbot/keyboards/default.py:91
 msgid "Previous 10"
 msgstr ""
 
@@ -487,7 +487,7 @@ msgstr ""
 msgid "You have set the following reservation:\n"
 msgstr ""
 
-#: tgbot/handlers/provider_schedule.py:273 utils/bot/services.py:56
+#: tgbot/handlers/provider_schedule.py:273 utils/bot/services.py:58
 msgid "Service: {service}\n"
 msgstr ""
 
@@ -496,21 +496,21 @@ msgid "Client: {name} {username}\n"
 msgstr ""
 
 #: tgbot/handlers/provider_schedule.py:294
-#: tgbot/handlers/reservation_create.py:124
+#: tgbot/handlers/reservation_create.py:133
 msgid "You've clearly entered something wrong. Please, try again."
 msgstr ""
 
 #: tgbot/handlers/provider_schedule.py:330
-#: tgbot/handlers/reservation_create.py:159
+#: tgbot/handlers/reservation_create.py:168
 msgid "Please, select the desirable date and time of the reservation."
 msgstr ""
 
-#: tgbot/handlers/provider_settings.py:16 tgbot/keyboards/default.py:31
+#: tgbot/handlers/provider_settings.py:16 tgbot/keyboards/default.py:30
 msgid "Provider settings"
 msgstr ""
 
 #: tgbot/handlers/provider_settings.py:17
-#: tgbot/handlers/provider_settings.py:34
+#: tgbot/handlers/provider_settings.py:33
 msgid "Back to provider settings"
 msgstr ""
 
@@ -518,11 +518,15 @@ msgstr ""
 msgid "Provider settings:"
 msgstr ""
 
-#: tgbot/handlers/provider_settings.py:28 tgbot/keyboards/default.py:42
+#: tgbot/handlers/provider_settings.py:28 tgbot/keyboards/default.py:40
 msgid "Get my deep link"
 msgstr ""
 
 #: tgbot/handlers/provider_settings.py:35
+msgid "Please, set up a Telegram username before using deep link."
+msgstr ""
+
+#: tgbot/handlers/provider_settings.py:38
 msgid "Your deep link:"
 msgstr ""
 
@@ -535,24 +539,19 @@ msgid "This provider has no services listed at the moment."
 msgstr ""
 
 #: tgbot/handlers/reservation_create.py:39
-#: tgbot/handlers/reservation_create.py:62
+#: tgbot/handlers/reservation_create.py:67
 msgid "You've canceled the booking process."
 msgstr ""
 
-#: tgbot/handlers/reservation_create.py:59
-#: tgbot/handlers/reservation_create.py:156
-msgid "Cancel booking"
-msgstr ""
-
-#: tgbot/handlers/reservation_create.py:88
+#: tgbot/handlers/reservation_create.py:93
 msgid "You have booked the following reservation:\n"
 msgstr ""
 
-#: tgbot/handlers/reservation_create.py:100
+#: tgbot/handlers/reservation_create.py:109
 msgid "You have a new reservation:\n"
 msgstr ""
 
-#: tgbot/handlers/service_create.py:25 tgbot/keyboards/default.py:82
+#: tgbot/handlers/service_create.py:25 tgbot/keyboards/default.py:74
 msgid "Add service"
 msgstr ""
 
@@ -572,11 +571,11 @@ msgstr ""
 msgid "Please, enter the price of this service:"
 msgstr ""
 
-#: tgbot/handlers/service_create.py:73 utils/bot/services.py:27
+#: tgbot/handlers/service_create.py:73 utils/bot/services.py:29
 msgid "minutes\n"
 msgstr ""
 
-#: tgbot/handlers/service_remove.py:31 tgbot/keyboards/default.py:83
+#: tgbot/handlers/service_remove.py:31 tgbot/keyboards/default.py:75
 msgid "Remove service"
 msgstr ""
 
@@ -592,11 +591,11 @@ msgstr ""
 msgid "This service has:\n"
 msgstr ""
 
-#: tgbot/handlers/service_remove.py:63 utils/bot/services.py:95
+#: tgbot/handlers/service_remove.py:63 utils/bot/services.py:97
 msgid "Upcoming reservations: "
 msgstr ""
 
-#: tgbot/handlers/service_remove.py:66 utils/bot/services.py:92
+#: tgbot/handlers/service_remove.py:66 utils/bot/services.py:94
 msgid "Past reservations: "
 msgstr ""
 
@@ -640,7 +639,7 @@ msgstr ""
 msgid "You've canceled the service removal process."
 msgstr ""
 
-#: tgbot/handlers/services_menu.py:12 tgbot/keyboards/default.py:25
+#: tgbot/handlers/services_menu.py:12 tgbot/keyboards/default.py:24
 msgid "Services menu"
 msgstr ""
 
@@ -648,193 +647,189 @@ msgstr ""
 msgid "You have no services set up at the moment."
 msgstr ""
 
-#: tgbot/handlers/start.py:28 tgbot/handlers/start.py:56
+#: tgbot/handlers/start.py:27 tgbot/handlers/start.py:55
 msgid "Hello, "
 msgstr ""
 
-#: tgbot/handlers/start.py:35
+#: tgbot/handlers/start.py:34
 msgid "Do you want to book an reservation with provider {full_name} @{username}?"
 msgstr ""
 
-#: tgbot/keyboards/default.py:214
+#: tgbot/keyboards/default.py:196
 msgid "Ukrainian Hryvnia"
 msgstr ""
 
-#: tgbot/keyboards/default.py:215
+#: tgbot/keyboards/default.py:197
 msgid "Euro"
 msgstr ""
 
-#: tgbot/keyboards/default.py:218
+#: tgbot/keyboards/default.py:200
 msgid "Polish Zloty"
 msgstr ""
 
-#: tgbot/keyboards/default.py:219
+#: tgbot/keyboards/default.py:201
 msgid "Czech Koruna"
 msgstr ""
 
-#: tgbot/keyboards/default.py:222
+#: tgbot/keyboards/default.py:204
 msgid "US Dollar"
 msgstr ""
 
-#: tgbot/keyboards/default.py:223
+#: tgbot/keyboards/default.py:205
 msgid "Canadian dollar"
 msgstr ""
 
-#: tgbot/keyboards/default.py:226
+#: tgbot/keyboards/default.py:208
 msgid "British Pound"
 msgstr ""
 
-#: tgbot/keyboards/default.py:227
+#: tgbot/keyboards/default.py:209
 msgid "Swedish Krona"
 msgstr ""
 
-#: tgbot/keyboards/default.py:230
+#: tgbot/keyboards/default.py:212
 msgid "Norwegian Krone'"
 msgstr ""
 
-#: tgbot/keyboards/default.py:231
+#: tgbot/keyboards/default.py:213
 msgid "Danish Krone"
 msgstr ""
 
-#: tgbot/keyboards/default.py:234
+#: tgbot/keyboards/default.py:216
 msgid "Romanian Leu"
 msgstr ""
 
-#: tgbot/keyboards/default.py:235
+#: tgbot/keyboards/default.py:217
 msgid "Moldovan Leu"
 msgstr ""
 
-#: utils/bot/consts.py:3
+#: utils/bot/consts.py:5
 #, python-format
 msgid "%m/%d/%Y"
 msgstr ""
 
-#: utils/bot/consts.py:4
+#: utils/bot/consts.py:6
 msgid "%I:%M %p"
 msgstr ""
 
-#: utils/bot/consts.py:5
+#: utils/bot/consts.py:7
 msgid "%H:%M"
 msgstr ""
 
-#: utils/bot/consts.py:6
+#: utils/bot/consts.py:8
 #, python-format
 msgid "%m/%d/%Y, %I:%M %p"
 msgstr ""
 
-#: utils/bot/consts.py:9 utils/bot/consts.py:19
+#: utils/bot/consts.py:11 utils/bot/consts.py:21
 msgid "Mon"
 msgstr ""
 
-#: utils/bot/consts.py:10 utils/bot/consts.py:20
+#: utils/bot/consts.py:12 utils/bot/consts.py:22
 msgid "Tue"
 msgstr ""
 
-#: utils/bot/consts.py:11 utils/bot/consts.py:21
+#: utils/bot/consts.py:13 utils/bot/consts.py:23
 msgid "Wen"
 msgstr ""
 
-#: utils/bot/consts.py:12 utils/bot/consts.py:22
+#: utils/bot/consts.py:14 utils/bot/consts.py:24
 msgid "Thu"
 msgstr ""
 
-#: utils/bot/consts.py:13 utils/bot/consts.py:23
+#: utils/bot/consts.py:15 utils/bot/consts.py:25
 msgid "Fri"
 msgstr ""
 
-#: utils/bot/consts.py:14 utils/bot/consts.py:24
+#: utils/bot/consts.py:16 utils/bot/consts.py:26
 msgid "Sat"
 msgstr ""
 
-#: utils/bot/consts.py:15 utils/bot/consts.py:25
+#: utils/bot/consts.py:17 utils/bot/consts.py:27
 msgid "Sun"
 msgstr ""
 
-#: utils/bot/consts.py:29
+#: utils/bot/consts.py:31
 msgid "Monday"
 msgstr ""
 
-#: utils/bot/consts.py:30
+#: utils/bot/consts.py:32
 msgid "Tuesday"
 msgstr ""
 
-#: utils/bot/consts.py:31
+#: utils/bot/consts.py:33
 msgid "Wednesday"
 msgstr ""
 
-#: utils/bot/consts.py:32
+#: utils/bot/consts.py:34
 msgid "Thursday"
 msgstr ""
 
-#: utils/bot/consts.py:33
+#: utils/bot/consts.py:35
 msgid "Friday"
 msgstr ""
 
-#: utils/bot/consts.py:34
+#: utils/bot/consts.py:36
 msgid "Saturday"
 msgstr ""
 
-#: utils/bot/consts.py:35
+#: utils/bot/consts.py:37
 msgid "Sunday"
 msgstr ""
 
-#: utils/bot/services.py:29
+#: utils/bot/services.py:31
 msgid "(inactive)"
 msgstr ""
 
-#: utils/bot/services.py:40
+#: utils/bot/services.py:42
 msgid "You have no upcoming reservations."
 msgstr ""
 
-#: utils/bot/services.py:42
+#: utils/bot/services.py:44
 msgid "You have no past reservations."
 msgstr ""
 
-#: utils/bot/services.py:57
+#: utils/bot/services.py:59
 msgid "Provider: {name}, @{username}\n"
 msgstr ""
 
-#: utils/bot/services.py:98
+#: utils/bot/services.py:100
 msgid "Last reservation: "
 msgstr ""
 
-#: utils/bot/services.py:101
+#: utils/bot/services.py:103
 msgid "Next reservation: "
 msgstr ""
 
-#: utils/bot/services.py:107
+#: utils/bot/services.py:109
 msgid "You have had no clients yet."
 msgstr ""
 
-#: utils/bot/services.py:116
+#: utils/bot/services.py:118
 msgid "No appointments."
 msgstr ""
 
-#: utils/bot/services.py:127
-msgid "Lunch"
-msgstr ""
-
-#: utils/bot/services.py:137
+#: utils/bot/services.py:146
 msgid "Upcoming breaks:"
 msgstr ""
 
-#: utils/bot/services.py:152
+#: utils/bot/services.py:161
 msgid "You have no upcoming breaks."
 msgstr ""
 
-#: utils/bot/services.py:158
+#: utils/bot/services.py:167
 msgid "Upcoming vacations:"
 msgstr ""
 
-#: utils/bot/services.py:172
+#: utils/bot/services.py:181
 msgid "You have no upcoming vacations."
 msgstr ""
 
-#: utils/bot/services.py:180
+#: utils/bot/services.py:189
 msgid "Lunch: "
 msgstr ""
 
-#: utils/bot/services.py:194
+#: utils/bot/services.py:203
 msgid "Days off: "
 msgstr ""
 
@@ -908,5 +903,40 @@ msgstr ""
 #~ msgstr ""
 
 #~ msgid "Date and time: {weekday}, {strdate}, {strtime}"
+#~ msgstr ""
+
+#~ msgid "Recurring schedule settings"
+#~ msgstr ""
+
+#~ msgid "Back to recurring schedule settings"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Please, consider keeping minutes divisible "
+#~ "by 15, i.e.: 11:30, 12:45, 13:00"
+#~ msgstr ""
+
+#~ msgid "Please, enter time in HH:MM format with MM being among 00, 15, 30, 45."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Please, enter end time (bigger than "
+#~ "the start time) in HH:MM format "
+#~ "with MM among 00, 15, 30, 45."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Choose an option or enter the "
+#~ "duration of a break in minutes "
+#~ "(should be divisible by 15)."
+#~ msgstr ""
+
+#~ msgid "Lunch"
+#~ msgstr ""
+
+#~ msgid "Edit days off"
+#~ msgstr ""
+
+#~ msgid "Enter the desirable lunch start time"
 #~ msgstr ""
 

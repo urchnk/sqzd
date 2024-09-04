@@ -11,4 +11,5 @@ admin_router = Router(name="admin")
 
 @admin_router.message()
 async def debug(message: Message):
+    print(message.text)
     pass

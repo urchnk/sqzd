@@ -29,7 +29,12 @@ async def provider_settings(message: Message, state: FSMContext):
     IsProviderFilter(),
 )
 async def my_deep_link(message: Message, state: FSMContext):
-    deep_link = await create_start_link(payload=encode_payload(str(message.from_user.id)), bot=bot)
     markup = ReplyKeyboardMarkup(keyboard=[[]], resize_keyboard=True)
     markup.keyboard.append([KeyboardButton(text=_("Back to provider settings"))])
-    await message.answer(_("Your deep link:") + "\n" + deep_link, reply_markup=get_provider_settings_menu())
+    if not message.from_user.username:
+        await message.answer(
+            _("Please, set up a Telegram username before using deep link."), reply_markup=get_provider_settings_menu()
+        )
+    else:
+        deep_link = await create_start_link(payload=message.from_user.username, bot=bot)
+        await message.answer(_("Your deep link:") + "\n" + deep_link, reply_markup=get_provider_settings_menu())

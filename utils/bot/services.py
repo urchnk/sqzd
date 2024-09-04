@@ -133,7 +133,7 @@ async def get_provider_events_as_message(tg_id: int, offset: int) -> str:
                 phone = ("☎️ " + event["client_phone"] + "\n") if event.get("client_phone") else ""
                 events_list.append(time + "📝 " + service + name + username + phone)
             elif event.get("is_lunch", False):
-                events_list.append(time + "🍴 " + _("Lunch") + "\n")
+                pass
             else:
                 events_list.append(time + "⏳ " + _("Break") + "\n")  # TODO: add break description field
     return "\n\n".join(events_list)

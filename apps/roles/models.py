@@ -47,7 +47,7 @@ class Provider(models.Model, TimeStampedModelMixin):
     lunch_end = NormalizedTimeField(null=True, blank=True)
     # String of numerical weekday values. Default: Saturday, Sunday (56).
     weekend = models.CharField(verbose_name="Weekly days off", max_length=7, default="56", blank=True)
-    slot = NormalizedDurationField(default=15)
+    slot = NormalizedDurationField(default=30)
     currency = CurrencyField(default="UAH")
 
     def __str__(self):
