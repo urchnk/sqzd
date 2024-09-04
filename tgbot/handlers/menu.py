@@ -1,57 +1,52 @@
 from aiogram import F, Router
-from aiogram.fsm.context import FSMContext
-from aiogram.types import Message
+from aiogram.types import CallbackQuery
 
 from bot import _
 from tgbot.filters.provider import IsProviderFilter
-from tgbot.keyboards.default import get_client_main_menu, get_main_menu, get_provider_main_menu
+from tgbot.keyboards.inline import get_client_main_menu, get_main_menu, get_provider_main_menu
 from utils.bot.services import get_client_reservations_as_message
 from utils.bot.to_async import is_provider
 
 menu_router = Router(name="menu")
 
 
-@menu_router.message(
-    F.text.in_(
+@menu_router.callback_query(
+    F.data.in_(
         [
-            _("Back to main menu"),
-            _("Back to provider menu"),
-            _("My provider menu"),
-            _("Cancel"),
+            "provider_menu",
+            "main_menu",
         ]
     ),
     IsProviderFilter(),
 )
-async def show_provider_menu(message: Message, state: FSMContext):
-    await state.clear()
-    if await is_provider(message.from_user.id):
-        await message.answer(_("Main menu:"), reply_markup=get_provider_main_menu())
+async def show_provider_menu(query: CallbackQuery):
+    await query.answer()
+    if await is_provider(query.from_user.id):
+        await query.message.edit_text(_("Main menu:"), reply_markup=get_provider_main_menu())
     else:
-        markup = await get_main_menu(message.from_user.id)
-        await message.answer(_("Main menu:"), reply_markup=markup)
+        markup = await get_main_menu(query.from_user.id)
+        await query.message.edit_text(_("Main menu:"), reply_markup=markup)
 
 
-@menu_router.message(
-    F.text.in_(
+@menu_router.callback_query(
+    F.data.in_(
         [
-            _("Back to main menu"),
-            _("Back to client menu"),
-            _("My client menu"),
-            _("Cancel"),
-            _("Cancel booking"),
+            "client_menu",
+            "main_menu",
         ]
     ),
 )
-async def show_client_menu(message: Message, state: FSMContext):
-    await state.clear()
-    markup = await get_client_main_menu(message.from_user.id)
-    answer_message = _("Client menu:") if await is_provider(message.from_user.id) else _("Main menu:")
-    await message.answer(answer_message, reply_markup=markup)
+async def show_client_menu(query: CallbackQuery):
+    await query.answer()
+    markup = await get_client_main_menu(query.from_user.id)
+    answer_message = _("Client menu:") if await is_provider(query.from_user.id) else _("Main menu:")
+    await query.message.edit_text(answer_message, reply_markup=markup)
 
 
-@menu_router.message(F.text.in_([_("Upcoming reservations"), _("Past reservations")]))
-async def get_upcoming_reservations(message: Message):
-    is_past = True if (message.text == _("Past reservations")) else False
-    markup = await get_client_main_menu(message.from_user.id)
-    reply_message = await get_client_reservations_as_message(message.from_user.id, is_past=is_past)
-    return await message.answer(reply_message, reply_markup=markup)
+@menu_router.callback_query(F.data.in_(["upcoming_reservations", "past_reservations"]))
+async def get_upcoming_reservations(query: CallbackQuery):
+    await query.answer()
+    is_past = True if (query.data == "past_reservations") else False
+    markup = await get_client_main_menu(query.from_user.id)
+    reply_message = await get_client_reservations_as_message(query.from_user.id, is_past=is_past)
+    return await query.message.edit_text(reply_message, reply_markup=markup)

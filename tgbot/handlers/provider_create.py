@@ -6,7 +6,7 @@ from aiogram import Router
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
-from aiogram.types import Message, ReplyKeyboardMarkup
+from aiogram.types import CallbackQuery, Message, ReplyKeyboardMarkup
 from aiogram.utils.deep_linking import create_start_link
 
 import moneyed
@@ -14,7 +14,7 @@ import requests
 from aiogram_i18n.types import KeyboardButton
 from bot import IPGEOLOCATION_API_KEY, _
 from requests.adapters import HTTPAdapter
-from tgbot.keyboards.default import get_currencies_keyboard, get_provider_main_menu, yes_no
+from tgbot.keyboards.inline import get_client_main_menu, get_currencies_keyboard, get_provider_main_menu, yes_no
 from urllib3 import Retry
 from utils.bot.consts import TIME_FORMAT, TIME_INPUT_FORMAT
 from utils.bot.to_async import add_provider_to_user, is_provider
@@ -49,19 +49,25 @@ async def register_provider(message: Message, state: FSMContext):
         await message.answer(_("Do you want to register yourself as a provider?"), reply_markup=yes_no())
 
 
-@provider_create_router.message(NewProviderStatesGroup.provider_confirmed)
-async def register_provider_start(message: Message, state: FSMContext):
-    if message.text == _("Yes"):
+@provider_create_router.callback_query(NewProviderStatesGroup.provider_confirmed)
+async def register_provider_start(query: CallbackQuery, state: FSMContext):
+    await query.answer()
+    if query.data == "yes":
         await state.set_state(NewProviderStatesGroup.set_phone_number)
-        await message.answer(_("Please, enter your phone number:"))
-    elif message.text == _("No"):
+        await query.message.edit_text(
+            text=_("Please, enter your phone number:"),
+        )
+    elif query.data == "no":
         await state.clear()
-        await message.answer(_("You've canceled the provider registration process."))
+        await query.message.edit_text(
+            text=_("You've canceled the provider registration process."),
+            reply_markup=await get_client_main_menu(query.from_user.id),
+        )
     else:
-        await message.answer(_("Please, enter Yes or No."))
+        return
 
 
-@provider_create_router.message(NewProviderStatesGroup.set_phone_number)
+@provider_create_router.callback_query(NewProviderStatesGroup.set_phone_number)
 async def set_phone_number(message: Message, state: FSMContext):
     if not is_phone_number(message.text):
         await message.answer(_("You've entered something wrong. Please, try again."))

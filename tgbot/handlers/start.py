@@ -2,11 +2,10 @@ from aiogram import Router
 from aiogram.filters import CommandObject, CommandStart
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
-from aiogram.utils.deep_linking import decode_payload
 
 from bot import _
 from tgbot.handlers.reservation_create import NewReservationStatesGroup
-from tgbot.keyboards.default import get_main_menu, yes_no
+from tgbot.keyboards.inline import get_main_menu, yes_no
 from utils.bot.services import get_client_reservations_as_message
 from utils.bot.to_async import get_or_create_user, get_provider
 
