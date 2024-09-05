@@ -5,7 +5,7 @@ from aiogram.types import Message
 
 from bot import _
 from tgbot.handlers.reservation_create import NewReservationStatesGroup
-from tgbot.keyboards.inline import get_main_menu, yes_no
+from tgbot.keyboards.default import get_main_menu, yes_no
 from utils.bot.services import get_client_reservations_as_message
 from utils.bot.to_async import get_or_create_user, get_provider
 

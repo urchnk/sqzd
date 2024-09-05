@@ -22,6 +22,20 @@ def yes_no():
     return keyboard.as_markup()
 
 
+def cancel():
+    keyboard = InlineKeyboardBuilder()
+    keyboard.button(
+        text=_("Cancel"),
+        callback_data="main_menu",
+    )
+    keyboard.button(
+        text=_("No"),
+        callback_data="no",
+    )
+    keyboard.adjust(2)
+    return keyboard.as_markup()
+
+
 def get_provider_main_menu():
     keyboard = InlineKeyboardBuilder()
     keyboard.button(
@@ -84,13 +98,6 @@ async def get_client_main_menu(tg_id):
         )
     keyboard.adjust(2)
     return keyboard.as_markup()
-
-
-async def get_main_menu(tg_id: int):
-    if await is_provider(tg_id):
-        return get_provider_main_menu()
-    else:
-        return await get_client_main_menu(tg_id)
 
 
 async def get_provider_clients_keyboard(tg_id: int, offset: int = 0):

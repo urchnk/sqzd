@@ -6,7 +6,7 @@ from aiogram import Router
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
-from aiogram.types import CallbackQuery, Message, ReplyKeyboardMarkup
+from aiogram.types import Message, ReplyKeyboardMarkup
 from aiogram.utils.deep_linking import create_start_link
 
 import moneyed
@@ -14,7 +14,7 @@ import requests
 from aiogram_i18n.types import KeyboardButton
 from bot import IPGEOLOCATION_API_KEY, _
 from requests.adapters import HTTPAdapter
-from tgbot.keyboards.inline import get_client_main_menu, get_currencies_keyboard, get_provider_main_menu, yes_no
+from tgbot.keyboards.default import get_client_main_menu, get_currencies_keyboard, get_provider_main_menu, yes_no
 from urllib3 import Retry
 from utils.bot.consts import TIME_FORMAT, TIME_INPUT_FORMAT
 from utils.bot.to_async import add_provider_to_user, is_provider
@@ -37,6 +37,14 @@ start_options = ["7:00", "8:00", "9:00", "10:00"]
 end_options = ["16:00", "17:00", "18:00", "19:00"]
 
 
+def cancel():
+    return ReplyKeyboardMarkup(
+        keyboard=[[KeyboardButton(text=_("Cancel"))]],
+        resize_keyboard=True,
+        one_time_keyboard=True,
+    )
+
+
 @provider_create_router.message(Command(commands="register_provider"))
 async def register_provider(message: Message, state: FSMContext):
     if await is_provider(message.from_user.id):
@@ -49,53 +57,50 @@ async def register_provider(message: Message, state: FSMContext):
         await message.answer(_("Do you want to register yourself as a provider?"), reply_markup=yes_no())
 
 
-@provider_create_router.callback_query(NewProviderStatesGroup.provider_confirmed)
-async def register_provider_start(query: CallbackQuery, state: FSMContext):
-    await query.answer()
-    if query.data == "yes":
+@provider_create_router.message(NewProviderStatesGroup.provider_confirmed)
+async def register_provider_start(message: Message, state: FSMContext):
+    if message.text == _("Yes"):
         await state.set_state(NewProviderStatesGroup.set_phone_number)
-        await query.message.edit_text(
+        await message.answer(
             text=_("Please, enter your phone number:"),
+            reply_markup=cancel(),
         )
-    elif query.data == "no":
+    elif message.text == _("No"):
         await state.clear()
-        await query.message.edit_text(
-            text=_("You've canceled the provider registration process."),
-            reply_markup=await get_client_main_menu(query.from_user.id),
+        await message.answer(
+            text=_("Main menu:"),
+            reply_markup=await get_client_main_menu(message.from_user.id),
         )
     else:
         return
 
 
-@provider_create_router.callback_query(NewProviderStatesGroup.set_phone_number)
+@provider_create_router.message(NewProviderStatesGroup.set_phone_number)
 async def set_phone_number(message: Message, state: FSMContext):
     if not is_phone_number(message.text):
         await message.answer(_("You've entered something wrong. Please, try again."))
     else:
         await state.update_data(phone=message.text)
         await state.set_state(NewProviderStatesGroup.set_email)
-        await message.answer(_("Please, enter your email:"))
+        await message.answer(text=_("Please, enter your email:"), reply_markup=cancel())
 
 
 @provider_create_router.message(NewProviderStatesGroup.set_email)
 async def set_email(message: Message, state: FSMContext):
     email = normalize_email(message.text)
     if not email:
-        await message.answer(_("You've entered something wrong. Please, try again."))
+        await message.answer(text=_("You've entered something wrong. Please, try again."), reply_markup=cancel())
     else:
 
         await state.update_data(email=email)
-        markup = ReplyKeyboardMarkup(
-            keyboard=[[KeyboardButton(text=_("Cancel"))]], resize_keyboard=True, one_time_keyboard=True
-        )
         await state.set_state(NewProviderStatesGroup.set_timezone)
-        await message.answer(_("Please, share your location, so we can set your timezone."), reply_markup=markup)
+        await message.answer(_("Please, share your location, so we can set your timezone."), reply_markup=cancel())
 
 
 @provider_create_router.message(NewProviderStatesGroup.set_timezone)
 async def set_timezone(message: Message, state: FSMContext):
     if not message.location:
-        await message.answer(_("You've sent something wrong. Please, try again."))
+        await message.answer(text=_("You've sent something wrong. Please, try again."), reply_markup=cancel())
     else:
 
         latitude = message.location.latitude
@@ -132,6 +137,7 @@ async def set_currency(message: Message, state: FSMContext):
         await state.update_data(currency=currency)
         markup = ReplyKeyboardMarkup(keyboard=[[]], resize_keyboard=True, one_time_keyboard=True)
         markup.keyboard.append([KeyboardButton(text=button) for button in start_options])
+        markup.keyboard.append([KeyboardButton(text=_("Cancel"))])
         await state.set_state(NewProviderStatesGroup.set_start)
         await message.answer(_("At what time do you begin your working day?"), reply_markup=markup)
 
@@ -143,10 +149,12 @@ async def set_start(message: Message, state: FSMContext):
     except ValueError:
         markup = ReplyKeyboardMarkup(keyboard=[[]], resize_keyboard=True, one_time_keyboard=True)
         markup.keyboard.append([KeyboardButton(text=button) for button in start_options])
+        markup.keyboard.append([KeyboardButton(text=_("Cancel"))])
         return await message.answer(_("You've entered something wrong. Please, try again."), reply_markup=markup)
     await state.update_data(start=start)
     markup = ReplyKeyboardMarkup(keyboard=[[]], resize_keyboard=True, one_time_keyboard=True)
     markup.keyboard.append([KeyboardButton(text=button) for button in end_options])
+    markup.keyboard.append([KeyboardButton(text=_("Cancel"))])
     await state.set_state(NewProviderStatesGroup.set_end)
     await message.answer(_("At what time do you finish your working day?"), reply_markup=markup)
 
@@ -158,6 +166,7 @@ async def set_end(message: Message, state: FSMContext):
     except ValueError:
         markup = ReplyKeyboardMarkup(keyboard=[[]], resize_keyboard=True, one_time_keyboard=True)
         markup.keyboard.append([KeyboardButton(text=button) for button in end_options])
+        markup.keyboard.append([KeyboardButton(text=_("Cancel"))])
         return await message.answer(_("You've entered something wrong. Please, try again."), reply_markup=markup)
 
     from bot import bot

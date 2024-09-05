@@ -79,7 +79,7 @@ def find_available_slots(
     tz = current_user.tz
     now = datetime.now(tz=tz)
     duration = timedelta(minutes=event_duration)
-    slot_duration = timedelta(minutes=provider.slot)
+    slot_duration = timedelta(minutes=event_duration)  # timedelta(minutes=provider.slot)
 
     day_start = max(datetime.combine(day, time(hour=0, minute=0), tzinfo=tz), normalize_time(now))
     day_end = datetime.combine(day, time(hour=0, minute=0), tzinfo=tz) + duration
