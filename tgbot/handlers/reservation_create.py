@@ -45,6 +45,8 @@ async def service_selection(message: Message, state: FSMContext):
 @reservation_create_router.message(NewReservationStatesGroup.datetime_selection)
 async def datetime_selection_or_complete_booking(message: Message, state: FSMContext):
     state_data = await state.get_data()
+    provider_id = int(state_data["provider_id"])
+    provider = await get_provider(provider_id)
 
     if message.text == _("Next day"):
         service_name = state_data["service_name"]
@@ -71,9 +73,7 @@ async def datetime_selection_or_complete_booking(message: Message, state: FSMCon
 
     elif len(message.text) == 5 and (":" in message.text):
         state_data = await state.get_data()
-        provider_id = int(state_data["provider_id"])
         provider_name = state_data["provider_name"]
-        provider = await get_provider(provider_id)
         client = await get_user(tg_id=message.from_user.id)
         service_data = await get_service_data(state_data["service_name"], provider_id)
         hour = int(message.text.split(":")[0])
@@ -121,7 +121,7 @@ async def datetime_selection_or_complete_booking(message: Message, state: FSMCon
 
     else:
         service_name = message.text.split(", ")[0]
-        offset = 0
+        offset = 0 if datetime.datetime.now(tz=provider.user.tz).time() < provider.end else 1
         await state.update_data(service_name=service_name, offset=offset)
 
     state_data = await state.get_data()
