@@ -496,7 +496,6 @@ msgid "Client:\n"
 msgstr "Клієнт:\n"
 
 #: tgbot/handlers/provider_schedule.py:207
-#, fuzzy
 msgid "Please, enter the new client's phone number:"
 msgstr "Будь ласка, введіть номер телефону клієнта:"
 

@@ -31,7 +31,7 @@ async def show_client_menu(message: Message):
 
 
 @menu_router.message(F.text.in_([_("Upcoming reservations"), _("Past reservations")]))
-async def get_upcoming_reservations(message: CallbackQuery):
+async def get_upcoming_reservations(message: Message):
     is_past = True if (message.text == _("Past reservations")) else False
     markup = await get_client_main_menu(message.from_user.id)
     reply_message = await get_client_reservations_as_message(message.from_user.id, is_past=is_past)
