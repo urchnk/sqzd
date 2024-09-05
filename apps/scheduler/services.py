@@ -6,6 +6,7 @@ from django.db.models import F, Q
 
 from apps.roles.models import Provider, User
 from apps.scheduler.models import Break, Reservation, Vacation
+from utils.bot.consts import DEFAULT_SLOT
 from utils.db import normalize_time
 
 PTZ = ZoneInfo("Europe/Vienna")
@@ -19,8 +20,8 @@ def get_events_by_day(
     client: User = None,
 ) -> list:
     if not (day_start and day_end):
-        day_start = datetime.combine(date=day, time=time())
-        day_end = datetime.combine(date=day + timedelta(days=1), time=time())
+        day_start = datetime.combine(date=day, time=time(), tzinfo=provider.user.tz)
+        day_end = datetime.combine(date=day + timedelta(days=1), time=time(), tzinfo=provider.user.tz)
 
     qs = Reservation.objects.select_related("provider", "client", "service").filter(
         Q(start__lte=day_end) & Q(end__gte=day_start),
@@ -47,6 +48,7 @@ def get_events_by_day(
     reserved_unsorted = reservations + breaks
 
     if provider.lunch_start and provider.lunch_end:
+        # yesterday and tomorrow lunches too in case of a big timezone difference
         for _day in {(day - timedelta(days=1)), day, (day + timedelta(days=1))}:
             lunch = {
                 "start": datetime.combine(date=_day, time=provider.lunch_start, tzinfo=provider.user.tz).astimezone(
@@ -57,8 +59,7 @@ def get_events_by_day(
                 ),
                 "is_lunch": True,
             }
-            if lunch["end"] > day_start or lunch["start"] < day_end:
-                reserved_unsorted.append(lunch)
+            reserved_unsorted.append(lunch)
 
     return sorted(reserved_unsorted, key=lambda d: d["start"])
 
@@ -73,7 +74,7 @@ def find_available_slots(
     provider: Provider,
     day: date,
     client: User = None,
-    event_duration: int = 15,
+    event_duration: int = DEFAULT_SLOT,
 ) -> tuple[list[datetime], bool, bool]:
     tz = current_user.tz
     now = datetime.now(tz=tz)
@@ -106,6 +107,7 @@ def find_available_slots(
                 or cursor < now
                 or is_vacation(provider.user.tg_id, cursor.astimezone(tz=provider.user.tz).date())
                 or not (provider.start <= provider_start <= provider_end <= provider.end)
+                or not cursor.date() == day  # prevent 00:00 at the end of the time choices keyboard
             ):
                 available_slots.append(cursor.astimezone(tz=tz))
 

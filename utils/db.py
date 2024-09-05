@@ -2,8 +2,10 @@ from datetime import datetime, time, timedelta
 
 from django.db import models
 
+from utils.bot.consts import DEFAULT_SLOT
 
-def normalize_duration(value: int, divider: int = 15) -> int:
+
+def normalize_duration(value: int, divider: int = DEFAULT_SLOT) -> int:
     if (value % divider) != 0:
         while (value % divider) != 0:
             value += 1

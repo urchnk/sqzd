@@ -5,6 +5,7 @@ from django.db import models
 
 from djmoney.models.fields import CurrencyField
 from timezone_field import TimeZoneField
+from utils.bot.consts import DEFAULT_SLOT
 from utils.db import NormalizedDurationField, NormalizedTimeField, TimeStampedModelMixin
 
 
@@ -47,8 +48,9 @@ class Provider(models.Model, TimeStampedModelMixin):
     lunch_end = NormalizedTimeField(null=True, blank=True)
     # String of numerical weekday values. Default: Saturday, Sunday (56).
     weekend = models.CharField(verbose_name="Weekly days off", max_length=7, default="56", blank=True)
-    slot = NormalizedDurationField(default=15)
+    slot = NormalizedDurationField(default=DEFAULT_SLOT)
     currency = CurrencyField(default="UAH")
+    paid_until = models.DateField(null=True)
 
     def __str__(self):
         return f"{self.user}"

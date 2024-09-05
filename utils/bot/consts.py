@@ -1,5 +1,7 @@
 from bot import _
 
+DEFAULT_SLOT = 30
+
 DATE_FORMAT = _("%m/%d/%Y")
 TIME_FORMAT = _("%I:%M %p")
 TIME_INPUT_FORMAT = _("%H:%M")

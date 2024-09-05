@@ -3,9 +3,8 @@ from datetime import time, timedelta
 from aiogram import types
 from aiogram.types import KeyboardButton
 
-import moneyed
 from bot import _
-from utils.bot.consts import TIME_INPUT_FORMAT
+from utils.bot.consts import DEFAULT_SLOT, TIME_INPUT_FORMAT
 from utils.bot.to_async import get_provider_clients, get_provider_data, get_provider_services, is_provider
 
 
@@ -38,14 +37,7 @@ def get_provider_main_menu():
 def get_provider_settings_menu():
     return types.ReplyKeyboardMarkup(
         keyboard=[
-            [
-                KeyboardButton(text=_("Get my deep link")),
-                # KeyboardButton(text=_("Services menu")),
-            ],
-            # [
-            #     KeyboardButton(text=_("Breaks & days off")),
-            #     KeyboardButton(text=_("Clients")),
-            # ],
+            [KeyboardButton(text=_("Get my deep link"))],
             [KeyboardButton(text=_("Back to main menu"))],
         ],
         resize_keyboard=True,
@@ -90,10 +82,10 @@ def get_provider_services_menu():
 
 async def get_provider_clients_keyboard(tg_id: int, offset: int = 0):
     markup = types.ReplyKeyboardMarkup(keyboard=[[]], resize_keyboard=True)
-    all_clients = [client for client in (await get_provider_clients(tg_id))]
+    all_clients = await get_provider_clients(tg_id)
 
     if all_clients:
-        clients = all_clients[offset : (offset + 10)]
+        clients = [client for client in all_clients][offset : (offset + 10)]
 
         if offset:
             markup.keyboard.append([KeyboardButton(text=_("Previous 10"))])
@@ -131,7 +123,8 @@ def get_provider_breaks_days_off_menu():
     return types.ReplyKeyboardMarkup(
         keyboard=[
             [
-                KeyboardButton(text=_("Recurring schedule settings")),
+                KeyboardButton(text=_("Edit lunch time")),
+                KeyboardButton(text=_("Edit weekly days off")),
             ],
             [
                 KeyboardButton(text=_("Breaks")),
@@ -143,22 +136,9 @@ def get_provider_breaks_days_off_menu():
     )
 
 
-def get_provider_recurring_schedule_menu():
-    return types.ReplyKeyboardMarkup(
-        keyboard=[
-            [
-                KeyboardButton(text=_("Edit lunch time")),
-                KeyboardButton(text=_("Edit days off")),
-            ],
-            [KeyboardButton(text=_("Back to breaks & days off"))],
-        ],
-        resize_keyboard=True,
-    )
-
-
 async def get_lunch_start_keyboard():
     provider = await get_provider_data()
-    span_length = (provider["start"] - provider["end"]) / 15
+    span_length = (provider["start"] - provider["end"]) / DEFAULT_SLOT
     slots: list[time] = [provider["start"]]
 
     for i in range(1, span_length):
@@ -195,12 +175,10 @@ def get_duration_choices_keyboard():
     return types.ReplyKeyboardMarkup(
         keyboard=[
             [
-                KeyboardButton(text="15"),
                 KeyboardButton(text="30"),
-                KeyboardButton(text="45"),
+                KeyboardButton(text="60"),
             ],
             [
-                KeyboardButton(text="60"),
                 KeyboardButton(text="90"),
                 KeyboardButton(text="120"),
             ],

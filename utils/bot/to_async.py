@@ -113,8 +113,14 @@ def get_tz(tg_id: int) -> ZoneInfo:
 
 
 @sync_to_async
-def get_provider(tg_id: int) -> Provider | None:
-    user = User.objects.filter(tg_id=tg_id).first()
+def get_provider(tg_id: int = None, username: str = None) -> Provider | None:
+    if tg_id:
+        user = User.objects.filter(tg_id=tg_id).first()
+    elif username:
+        user = User.objects.filter(username=username).first()
+    else:
+        return None
+
     if user:
         provider = Provider.objects.filter(user=user).first()
         return provider
@@ -320,7 +326,7 @@ def is_vacation(tg_id: int, day: date) -> bool:
 
 
 @sync_to_async
-def is_day_off(tg_id: int, day: date) -> bool:
+def is_weekend(tg_id: int, day: date) -> bool:
     provider: Provider = User.objects.filter(tg_id=tg_id).first().provider
     return str(day.weekday()) in provider.weekend
 
