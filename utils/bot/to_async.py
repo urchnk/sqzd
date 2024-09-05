@@ -47,32 +47,37 @@ def get_or_create_user(
     provider_created: bool = False,
 ) -> User:
     if tg_id:
+        print(1)
         user = User.objects.filter(tg_id=tg_id).first()
         if user:
             return user
     elif phone:
+        print(2)
         user = User.objects.filter(phone=phone).first()
         if user:
             return user
     elif username:
+        print(3)
         user = User.objects.filter(username=username).first()
         if user:
             return user
 
     else:
-        user = User(
-            tg_id=tg_id,
-            username=username or ("#" + str(tg_id) if tg_id else None) or phone,
-            tg_username=username,
-            locale=locale,
-            first_name=first_name,
-            last_name=last_name,
-            phone=phone,
-            tz=tz,
-            provider_created=provider_created,
-        )
-        user.save()
-        return user
+        pass
+
+    user = User(
+        tg_id=tg_id,
+        username=username or ("#" + str(tg_id) if tg_id else None) or phone,
+        tg_username=username,
+        locale=locale,
+        first_name=first_name,
+        last_name=last_name,
+        phone=phone,
+        tz=tz,
+        provider_created=provider_created,
+    )
+    user.save()
+    return user
 
 
 @sync_to_async
