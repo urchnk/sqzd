@@ -49,7 +49,7 @@ async def provider_list_reservations(message: Message, state: FSMContext):
     offset = 0 if datetime.datetime.now(tz=provider.user.tz).time() < provider.end else 1
     await state.update_data(offset=offset)
 
-    events_as_message = await get_provider_events_as_message(message.from_user.id, offset=0)
+    events_as_message = await get_provider_events_as_message(message.from_user.id, offset=offset)
     markup = ReplyKeyboardMarkup(keyboard=[[]], resize_keyboard=True, one_time_keyboard=True)
     markup.keyboard.append([_("Previous day"), _("Next day")])
     markup.keyboard.append([_("New reservation")])
@@ -77,12 +77,13 @@ async def provider_new_reservation(message: Message, state: FSMContext):
 )
 async def provider_surf_reservations(message: Message, state: FSMContext):
     state_data = await state.get_data()
+    provider = await get_provider(tg_id=message.from_user.id)
     offset = state_data["offset"]
     if message.text == _("Previous day"):
         offset = offset - 1
         await state.update_data(offset=offset)
     elif message.text == _("Today"):
-        offset = 0
+        offset = 0 if datetime.datetime.now(tz=provider.user.tz).time() < provider.end else 1
         await state.update_data(offset=offset)
     elif message.text == _("Next day"):
         offset = offset + 1
@@ -116,7 +117,6 @@ async def provider_surf_reservations(message: Message, state: FSMContext):
 )
 async def provider_new_reservation_choose_client(message: Message, state: FSMContext):
     state_data = await state.get_data()
-
     if message.text == _("Choose client"):
         offset = 0
 
