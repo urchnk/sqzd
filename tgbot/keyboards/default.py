@@ -100,7 +100,7 @@ async def get_provider_clients_keyboard(tg_id: int, offset: int = 0):
 
             markup.keyboard.append([KeyboardButton(text=f"{client.full_name}, {identifier}")])
 
-        if all_clients[-1] != clients[-1]:
+        if (len(all_clients) > 1) and (all_clients[-1] != clients[-1]):
             markup.keyboard.append([KeyboardButton(text=_("Next 10"))])
 
     markup.keyboard.append([KeyboardButton(text=_("Back to main menu"))])

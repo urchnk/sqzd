@@ -58,14 +58,14 @@ async def breaks_and_dayoffs_menu(message: Message, state: FSMContext):
     reply_message = ""
 
     lunch = await get_provider_lunch_as_message(message.from_user.id)
-    reply_message += (lunch or _("You have not set lunch hours yet.")) + "\n\n"
+    reply_message += (lunch or _("You have not set lunch hours.")) + "\n\n"
 
     days_off = await get_provider_weekly_days_off_as_message(message.from_user.id)
     reply_message += (days_off or _("You have not set your weekly days off yet.")) + "\n\n"
 
     breaks = await get_provider_breaks_as_message(message.from_user.id)
     if breaks:
-        reply_message += breaks + "\n\n"
+        reply_message += breaks + "\n"
 
     vacations = await get_provider_vacations_as_message(message.from_user.id)
     if vacations:

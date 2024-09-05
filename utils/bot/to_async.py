@@ -44,24 +44,35 @@ def get_or_create_user(
     username: str = None,
     locale: str = "uk",
     tz: str | ZoneInfo = "Europe/Kyiv",
+    provider_created: bool = False,
 ) -> User:
     if tg_id:
         user = User.objects.filter(tg_id=tg_id).first()
         if user:
             return user
-        else:
-            user = User(
-                tg_id=tg_id,
-                username=username or (first_name + get_random_username()),
-                tg_username=username,
-                locale=locale,
-                first_name=first_name,
-                last_name=last_name,
-                phone=phone,
-                tz=tz,
-            )
-            user.save()
+    elif phone:
+        user = User.objects.filter(phone=phone).first()
+        if user:
             return user
+    elif username:
+        user = User.objects.filter(username=username).first()
+        if user:
+            return user
+
+    else:
+        user = User(
+            tg_id=tg_id,
+            username=username or ("#" + str(tg_id) if tg_id else None) or phone,
+            tg_username=username,
+            locale=locale,
+            first_name=first_name,
+            last_name=last_name,
+            phone=phone,
+            tz=tz,
+            provider_created=provider_created,
+        )
+        user.save()
+        return user
 
 
 @sync_to_async
@@ -122,7 +133,7 @@ def get_provider(tg_id: int = None, username: str = None) -> Provider | None:
         return None
 
     if user:
-        provider = Provider.objects.filter(user=user).first()
+        provider = Provider.objects.select_related("user").filter(user=user).first()
         return provider
     else:
         return None
